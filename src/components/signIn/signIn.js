@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -8,6 +9,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -30,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LogIn() {
+
+export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState([]);
@@ -45,6 +48,7 @@ export default function LogIn() {
       const user = await APIHelper.signInUser(email, password)
       setUser(user)
   }
+
   const classes = useStyles();
 
   return (
