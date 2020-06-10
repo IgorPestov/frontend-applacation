@@ -11,7 +11,7 @@ async function signUpUser(firstName, email, password) {
   return newUser;
 }
 
-async function signInUser(email, password) {
+async function signInUser(email, password) { 
   const { data: user } = await axios.post(API_URL + `${"signIn"}`, {
     email,
     password,

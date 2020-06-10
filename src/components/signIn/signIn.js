@@ -10,7 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
 
-
+import SignUp from "../signUp/signUp"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,6 +37,7 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState([]);
+  const [err, setErr] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();  
@@ -44,17 +45,33 @@ export default function SignIn() {
     signInUser(email, password)
   }
   const signInUser = async (email, password) => {
-    
+    try {  
       const user = await APIHelper.signInUser(email, password)
-      setUser(user)
+      if(user) {
+        setUser(user)
+      }
+    } catch(err) {
+      setErr(err.response)
+    }
   }
+  const A =()=> {
+    if(err) {
+      return (
+        <span>1</span>
+      )
+   } else return null
+  
+ }
+ 
+  
 
   const classes = useStyles();
 
   return (
-      <Container component="main" maxWidth="xs">
+      <Container path ="/signIn" component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
+          {err && <span>{err.data.message}</span>}
           <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <TextField
               onChange={({ target }) => setEmail(target.value)}
@@ -96,8 +113,8 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link href="/signUp" variant="body2">
+                  Don't have an account? Sign Up
                 </Link>
               </Grid>
             </Grid>
