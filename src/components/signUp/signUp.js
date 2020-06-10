@@ -1,13 +1,15 @@
 import React, { useState, useReducer } from "react";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp(props) {
+export default function SignInSignUp(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -39,7 +41,7 @@ export default function SignUp(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-     signUpUser(email, password,firstName)
+    signUpUser(email, password, firstName);
   };
   const signUpUser = async (email, password, firstName) => {
     try {
@@ -47,7 +49,6 @@ export default function SignUp(props) {
       setUser(user);
     } catch (err) {
       setErr(err.response);
-      console.log(err.response);
     }
   };
 
