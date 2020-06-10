@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState, useReducer } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from '@material-ui/core/Link';
+import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import APIHelper from "../../APIHelper";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,6 +31,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp(props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [user, setUser] = useState([]);
+  const [err, setErr] = useState(null);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+     signUpUser(email, password,firstName)
+  };
+  const signUpUser = async (email, password, firstName) => {
+    try {
+      const user = await APIHelper.signUpUser(email, password, firstName);
+      setUser(user);
+    } catch (err) {
+      setErr(err.response);
+      console.log(err.response);
+    }
+  };
 
   const classes = useStyles();
 
@@ -40,10 +60,12 @@ export default function SignUp(props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        {err && <span>{err.data.message}</span>}
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                onChange={({ target }) => setFirstName(target.value)}
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
@@ -56,6 +78,7 @@ export default function SignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                onChange={({ target }) => setEmail(target.value)}
                 variant="outlined"
                 required
                 fullWidth
@@ -67,6 +90,7 @@ export default function SignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                onChange={({ target }) => setPassword(target.value)}
                 variant="outlined"
                 required
                 fullWidth
