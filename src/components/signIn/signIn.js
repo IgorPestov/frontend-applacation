@@ -54,16 +54,6 @@ export default function SignIn() {
       setErr(err.response)
     }
   }
-  const A =()=> {
-    if(err) {
-      return (
-        <span>1</span>
-      )
-   } else return null
-  
- }
- 
-  
 
   const classes = useStyles();
 
@@ -113,7 +103,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signUp" variant="body2">
+                <Link href="#" variant="body2">
                   Don't have an account? Sign Up
                 </Link>
               </Grid>
