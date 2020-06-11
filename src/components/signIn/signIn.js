@@ -37,13 +37,13 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState([]);
   const [err, setErr] = useState(null);
-  const [errNull, setErrNull] = useState(null)
+  const [errEmpty, seterrEmpty] = useState(null);
 
   const handleSubmit = () => {
-    if(!email.trim()&&!password.trim()) {
-     return setErrNull("Empty fields")
+    if (!email.trim() && !password.trim()) {
+      return seterrEmpty("Empty fields");
     }
-    setErrNull(null)
+    seterrEmpty(null);
     signInUser(email, password);
   };
 
@@ -57,7 +57,6 @@ export default function SignIn() {
     } catch (err) {
       return setErr(err.response);
     }
-    
   };
 
   const classes = useStyles();
@@ -67,10 +66,10 @@ export default function SignIn() {
       <CssBaseline />
       <div className={classes.paper}>
         {err && <span className={classes.err}>{err.data.message}</span>}
-        {errNull && <span className={classes.err}>{errNull}</span>}
+        {errEmpty && <span className={classes.err}>{errEmpty}</span>}
         <form className={classes.form} noValidate>
           <TextField
-            error={!!err || !!errNull}
+            error={!!err || !!errEmpty}
             onChange={({ target }) => setEmail(target.value)}
             variant="outlined"
             margin="normal"
@@ -83,7 +82,7 @@ export default function SignIn() {
             autoFocus
           />
           <TextField
-            error={!!err || !!errNull}
+            error={!!err || !!errEmpty}
             onChange={({ target }) => setPassword(target.value)}
             variant="outlined"
             margin="normal"
@@ -96,7 +95,6 @@ export default function SignIn() {
             autoComplete="current-password"
           />
           <Button
-            // type="submit"
             fullWidth
             variant="contained"
             color="primary"

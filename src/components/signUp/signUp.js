@@ -41,13 +41,13 @@ export default function SignInSignUp(props) {
   const [firstName, setFirstName] = useState("");
   const [user, setUser] = useState([]);
   const [err, setErr] = useState(null);
-  const [errNull, setErrNull] = useState(null);
+  const [errEmpty, seterrEmpty] = useState(null);
   const check = email.trim() && password.trim() && firstName.trim();
   const handleSubmit = (event) => {
     if (!check) {
-      return setErrNull("Empty fields");
+      return seterrEmpty("Empty fields");
     }
-    setErrNull(null);
+    seterrEmpty(null);
     signUpUser(email, password, firstName);
   };
   const signUpUser = async (email, password, firstName) => {
@@ -71,12 +71,12 @@ export default function SignInSignUp(props) {
         </Typography>
 
         {err && <span className={classes.err}>{err.data.message}</span>}
-        {errNull && <span className={classes.err}>{errNull}</span>}
+        {errEmpty && <span className={classes.err}>{errEmpty}</span>}
         <form action="/profile/" className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                error={!!errNull}
+                error={!!errEmpty}
                 onChange={({ target }) => setFirstName(target.value)}
                 autoComplete="fname"
                 name="firstName"
@@ -90,7 +90,7 @@ export default function SignInSignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!!errNull}
+                error={!err || !!errEmpty}
                 onChange={({ target }) => setEmail(target.value)}
                 variant="outlined"
                 required
@@ -103,7 +103,7 @@ export default function SignInSignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!!errNull}
+                error={!!errEmpty}
                 onChange={({ target }) => setPassword(target.value)}
                 variant="outlined"
                 required
@@ -122,7 +122,6 @@ export default function SignInSignUp(props) {
             </Grid>
           </Grid>
           <Button
-            // type="submit"
             fullWidth
             variant="contained"
             color="primary"
