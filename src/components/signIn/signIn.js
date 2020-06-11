@@ -10,7 +10,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
 
-import SignUp from "../signUp/signUp"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  err: {
+    coolor: "red"
+  }
 }));
 
 
@@ -61,9 +63,10 @@ export default function SignIn() {
       <Container path ="/signIn" component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          {err && <span>{err.data.message}</span>}
+          {err && <span className={classes.err}>{err.data.message}</span>}
           <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <TextField
+              error={!!err}
               onChange={({ target }) => setEmail(target.value)}
               variant="outlined"
               margin="normal"
@@ -76,6 +79,7 @@ export default function SignIn() {
               autoFocus
             />
             <TextField
+              error={!!err}
               onChange={({ target }) => setPassword(target.value)}
               variant="outlined"
               margin="normal"

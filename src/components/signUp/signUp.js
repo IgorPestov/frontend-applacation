@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  err: {
+    coolor: "red"
+  }
 }));
 
 export default function SignInSignUp(props) {
@@ -61,8 +64,9 @@ export default function SignInSignUp(props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        {err && <span>{err.data.message}</span>}
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
+
+        {err && <span className={classes.err}>{err.data.message}</span>}
+        <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -79,6 +83,7 @@ export default function SignInSignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={!!err}
                 onChange={({ target }) => setEmail(target.value)}
                 variant="outlined"
                 required
@@ -91,6 +96,7 @@ export default function SignInSignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={!!err}
                 onChange={({ target }) => setPassword(target.value)}
                 variant="outlined"
                 required
