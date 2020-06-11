@@ -10,7 +10,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
 
-import SignUp from "../signUp/signUp"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -54,16 +53,6 @@ export default function SignIn() {
       setErr(err.response)
     }
   }
-  const A =()=> {
-    if(err) {
-      return (
-        <span>1</span>
-      )
-   } else return null
-  
- }
- 
-  
 
   const classes = useStyles();
 
@@ -71,9 +60,10 @@ export default function SignIn() {
       <Container path ="/signIn" component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          {err && <span>{err.data.message}</span>}
+          {err && <span style={{color:"red"}}>{err.data.message}</span>}
           <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <TextField
+              error={!!err}
               onChange={({ target }) => setEmail(target.value)}
               variant="outlined"
               margin="normal"
@@ -86,6 +76,7 @@ export default function SignIn() {
               autoFocus
             />
             <TextField
+              error={!!err}
               onChange={({ target }) => setPassword(target.value)}
               variant="outlined"
               margin="normal"
