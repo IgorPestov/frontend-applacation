@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  err: {
+    coolor: "red"
+  }
 }));
 
 export default function SignUp(props) {
@@ -40,7 +43,7 @@ export default function SignUp(props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        {err && <span style={{color:"red"}}>{err.data.message}</span>}
+        {err && <span className={classes.err}>{err.data.message}</span>}
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>

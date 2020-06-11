@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  err: {
+    coolor: "red"
+  }
 }));
 
 
@@ -60,7 +63,7 @@ export default function SignIn() {
       <Container path ="/signIn" component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          {err && <span style={{color:"red"}}>{err.data.message}</span>}
+          {err && <span className={classes.err}>{err.data.message}</span>}
           <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <TextField
               error={!!err}
