@@ -52,6 +52,7 @@ export default function SignInSignUp(props) {
       setUser(user);
     } catch (err) {
       setErr(err.response);
+      setUser([]);
     }
   };
 
