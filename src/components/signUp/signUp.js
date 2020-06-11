@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   err: {
-    coolor: "red"
-  }
+    color: "red",
+  },
 }));
 
 export default function SignInSignUp(props) {
@@ -66,7 +66,7 @@ export default function SignInSignUp(props) {
         </Typography>
 
         {err && <span className={classes.err}>{err.data.message}</span>}
-        <form className={classes.form} noValidate>
+        <form action="/profile/" className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -96,7 +96,6 @@ export default function SignInSignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!!err}
                 onChange={({ target }) => setPassword(target.value)}
                 variant="outlined"
                 required

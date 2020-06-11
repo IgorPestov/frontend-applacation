@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,7 +8,6 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,98 +21,105 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
   err: {
-    coolor: "red"
-  }
+    color: "red",
+  },
 }));
-
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState([]);
   const [err, setErr] = useState(null);
+  const [errNull, setErrNull] = useState(null)
 
-  const handleSubmit = (event) => {
-    event.preventDefault();  
-    console.log('work')  
-    signInUser(email, password)
-  }
-  const signInUser = async (email, password) => {
-    try {  
-      const user = await APIHelper.signInUser(email, password)
-      if(user) {
-        setUser(user)
-      }
-    } catch(err) {
-      setErr(err.response)
+  const handleSubmit = () => {
+    if(!email.trim()&&!password.trim()) {
+     return setErrNull("Empty fields")
     }
-  }
+    setErrNull(null)
+    signInUser(email, password);
+  };
+
+  const signInUser = async (email, password) => {
+    try {
+      const user = await APIHelper.signInUser(email, password);
+
+      if (user) {
+        setUser(user);
+      }
+    } catch (err) {
+      return setErr(err.response);
+    }
+    
+  };
 
   const classes = useStyles();
 
   return (
-      <Container path ="/signIn" component="main" maxWidth="xs">
-        <CssBaseline />
-        <div className={classes.paper}>
-          {err && <span className={classes.err}>{err.data.message}</span>}
-          <form className={classes.form} noValidate onSubmit={handleSubmit}>
-            <TextField
-              error={!!err}
-              onChange={({ target }) => setEmail(target.value)}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              error={!!err}
-              onChange={({ target }) => setPassword(target.value)}
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign in
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Don't have an account? Sign Up
-                </Link>
-              </Grid>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.paper}>
+        {err && <span className={classes.err}>{err.data.message}</span>}
+        {errNull && <span className={classes.err}>{errNull}</span>}
+        <form className={classes.form} noValidate>
+          <TextField
+            error={!!err || !!errNull}
+            onChange={({ target }) => setEmail(target.value)}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+          />
+          <TextField
+            error={!!err || !!errNull}
+            onChange={({ target }) => setPassword(target.value)}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+          />
+          <Button
+            // type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleSubmit}
+          >
+            Sign in
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
             </Grid>
-          </form>
-        </div>
-        <Box mt={8}></Box>
-      </Container>
+            <Grid item>
+              <Link href="/signUp" variant="body2">
+                Don't have an account? Sign Up
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+      <Box mt={8}></Box>
+    </Container>
   );
 }
