@@ -41,9 +41,13 @@ export default function SignInSignUp(props) {
   const [firstName, setFirstName] = useState("");
   const [user, setUser] = useState([]);
   const [err, setErr] = useState(null);
-
+  const [errNull, setErrNull] = useState(null);
+  const check = email.trim() && password.trim() && firstName.trim();
   const handleSubmit = (event) => {
-    event.preventDefault();
+    if (!check) {
+      return setErrNull("Empty fields");
+    }
+    setErrNull(null);
     signUpUser(email, password, firstName);
   };
   const signUpUser = async (email, password, firstName) => {
@@ -67,10 +71,12 @@ export default function SignInSignUp(props) {
         </Typography>
 
         {err && <span className={classes.err}>{err.data.message}</span>}
-        <form action="/profile/" className={classes.form} noValidate onSubmit={handleSubmit}>
+        {errNull && <span className={classes.err}>{errNull}</span>}
+        <form action="/profile/" className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                error={!!errNull}
                 onChange={({ target }) => setFirstName(target.value)}
                 autoComplete="fname"
                 name="firstName"
@@ -84,7 +90,7 @@ export default function SignInSignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!!err}
+                error={!!errNull}
                 onChange={({ target }) => setEmail(target.value)}
                 variant="outlined"
                 required
@@ -97,6 +103,7 @@ export default function SignInSignUp(props) {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={!!errNull}
                 onChange={({ target }) => setPassword(target.value)}
                 variant="outlined"
                 required
@@ -115,11 +122,12 @@ export default function SignInSignUp(props) {
             </Grid>
           </Grid>
           <Button
-            type="submit"
+            // type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSubmit}
           >
             Sign Up
           </Button>
