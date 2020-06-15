@@ -94,9 +94,10 @@ export default function SignInSignUp(props) {
     try {
       const user = await APIHelper.signUpUser(email, password, firstName);
       setUser(user);
+      props.history.push("/profile")
     } catch (err) {
       setErr(err.response);
-      props.history.push("/profile")
+      setUser([])
     }
   };
 
