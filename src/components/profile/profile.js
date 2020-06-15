@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {
   AppBar,
   CssBaseline,
@@ -90,11 +89,10 @@ export default function Profile(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+  
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -207,7 +205,7 @@ export default function Profile(props) {
                       aria-label="upload picture"
                       component="span"
                     >
-                      <Edit />
+                      <Edit/>
                     </IconButton>
                   </label>
                 </Paper>
