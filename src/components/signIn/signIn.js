@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState([]);
@@ -53,6 +53,7 @@ export default function SignIn() {
 
       if (user) {
         setUser(user);
+        props.history.push("/profile")
       }
     } catch (err) {
       return setErr(err.response);
