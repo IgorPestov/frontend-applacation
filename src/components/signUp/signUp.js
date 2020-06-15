@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState } from "react";
 import {
   Button,
   CssBaseline,
@@ -41,13 +41,53 @@ export default function SignInSignUp(props) {
   const [firstName, setFirstName] = useState("");
   const [user, setUser] = useState([]);
   const [err, setErr] = useState(null);
-  const [errEmpty, seterrEmpty] = useState(null);
-  const check = email.trim() && password.trim() && firstName.trim();
-  const handleSubmit = (event) => {
-    if (!check) {
-      return seterrEmpty("Empty fields");
+  const [errEmpty, setErrEmrty] = useState(null);
+  const [errEmail, setErrEmail] = useState(null);
+  const [errPassword, setErrPassword] = useState(null);
+  const [errFirstName, setErrFirstName] = useState(null);
+  const checkInputText = email.trim() && password.trim() && firstName.trim();
+  const regEmail = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/;
+  const regPassword = /^\S*$/;
+  const regFirstName = /^\S*$/;
+  const changePassword = (event) => {
+    setErrEmrty(null);
+    if (
+      !regPassword.test(event.target.value) ||
+      event.target.value.length < 8
+    ) {
+      return setErrPassword(
+        'Password must be 8 characters long and must be have no spaces!"'
+      );
     }
-    seterrEmpty(null);
+    setErrPassword(null);
+    return setPassword(event.target.value);
+  };
+  const changeFirstName = (event) => {
+    console.log(event.target.value.length != 0);
+
+    setErrEmrty(null);
+    if (
+      !regFirstName.test(event.target.value) ||
+      event.target.value.length == 0
+    ) {
+      return setErrFirstName("First name must be have no spaces");
+    }
+    setErrFirstName(null);
+    return setFirstName(event.target.value);
+  };
+  const changeEmail = (event) => {
+    setErrEmrty(null);
+    if (!regEmail.test(event.target.value)) {
+      return setErrEmail("Invalid E-mail");
+    }
+    setErrEmail(null);
+    return setEmail(event.target.value);
+  };
+  const handleSubmit = (event) => {
+    if (!checkInputText) {
+      return setErrEmrty("Empty fields");
+    }
+    setErrEmrty(null);
     signUpUser(email, password, firstName);
   };
   const signUpUser = async (email, password, firstName) => {
@@ -76,8 +116,8 @@ export default function SignInSignUp(props) {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                error={!!errEmpty}
-                onChange={({ target }) => setFirstName(target.value)}
+                error={!!errFirstName || !!errEmpty}
+                onChange={changeFirstName}
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
@@ -87,11 +127,14 @@ export default function SignInSignUp(props) {
                 label="First Name"
                 autoFocus
               />
+              {errFirstName && (
+                <span className={classes.err}>{errFirstName}</span>
+              )}
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!err || !!errEmpty}
-                onChange={({ target }) => setEmail(target.value)}
+                error={!!err || !!errEmail || !!errEmpty}
+                onChange={changeEmail}
                 variant="outlined"
                 required
                 fullWidth
@@ -100,11 +143,12 @@ export default function SignInSignUp(props) {
                 name="email"
                 autoComplete="email"
               />
+              {errEmail && <span className={classes.err}>{errEmail}</span>}
             </Grid>
             <Grid item xs={12}>
               <TextField
-                error={!!errEmpty}
-                onChange={({ target }) => setPassword(target.value)}
+                error={!!errPassword || !!errEmpty}
+                onChange={changePassword}
                 variant="outlined"
                 required
                 fullWidth
@@ -114,6 +158,9 @@ export default function SignInSignUp(props) {
                 id="password"
                 autoComplete="current-password"
               />
+              {errPassword && (
+                <span className={classes.err}>{errPassword}</span>
+              )}
             </Grid>
             <Grid item>
               <Link href="/signIn" variant="body2">
