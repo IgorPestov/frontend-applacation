@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   CssBaseline,
@@ -20,8 +20,10 @@ import {
 } from "@material-ui/core";
 import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-const drawerWidth = 240;
+import { connect } from "react-redux";
+import APIHelper from "../../APIHelper";
 
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
   paper: {
@@ -84,7 +86,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Profile(props) {
+const Profile = (props) => {
+  const { user } = props;
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -92,7 +95,16 @@ export default function Profile(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
+
+  console.log('user----',user)
+
+  const logOut = () => {
+    localStorage.setItem('logged', false)
+    if(!localStorage.setItem('logged', false)) {
+      props.history.push("/signIn")
+    }
+    
+  }
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -131,7 +143,7 @@ export default function Profile(props) {
           <Typography variant="h6" className={classes.title} noWrap>
             Profile
           </Typography>
-          <Button color="inherit">logout</Button>
+          <Button color="inherit" onClick={logOut}>logout</Button>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -205,7 +217,7 @@ export default function Profile(props) {
                       aria-label="upload picture"
                       component="span"
                     >
-                      <Edit/>
+                      <Edit />
                     </IconButton>
                   </label>
                 </Paper>
@@ -239,4 +251,10 @@ export default function Profile(props) {
       </main>
     </div>
   );
-}
+};
+const mapStateToProps = ({ user }) => {
+   console.log("USER STORE-----------",user)
+
+  return { user };
+};
+export default connect(mapStateToProps)(Profile);

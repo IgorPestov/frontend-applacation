@@ -11,16 +11,17 @@ async function signUpUser(email, firstName, password) {
   return newUser;
 }
 
-async function signInUser(email, password) {
+async function signInUser(email, password, id) {
   const { data: user } = await axios.post(API_URL + `${"signIn"}`, {
     email,
     password,
+    id
   });
   return user;
 }
 async function showUserInfo(id) {
   const { data: user } = await axios.get(
-    API_URL + `${"showUserInfo"}` + `${id}`
+    API_URL + `${"showUserInfo/"}` + `${id}`
   );
   return user;
 }

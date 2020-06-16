@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -8,6 +8,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn(props) {
+ const  SignIn = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState([]);
@@ -52,8 +53,10 @@ export default function SignIn(props) {
       const user = await APIHelper.signInUser(email, password);
 
       if (user) {
+        localStorage.setItem('logged', true)
         setUser(user);
         props.history.push("/profile")
+        props.userPost(user)
       }
     } catch (err) {
       return setErr(err.response);
@@ -122,3 +125,15 @@ export default function SignIn(props) {
     </Container>
   );
 }
+    const mapDispatchToProps = (dispatch) => {
+      return {
+        userPost: (newUser) => {
+          dispatch({
+            type: "USER_POST",
+            payload: newUser
+          })
+        }
+      }
+    }
+
+export default connect(null,mapDispatchToProps)(SignIn);
