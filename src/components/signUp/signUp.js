@@ -97,7 +97,6 @@ export default function SignInSignUp(props) {
       props.history.push("/profile")
     } catch (err) {
       setErr(err.response);
-      setUser([])
     }
   };
 
