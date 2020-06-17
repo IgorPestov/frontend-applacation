@@ -21,7 +21,7 @@ import {
 import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import APIHelper from "../../APIHelper";
+var jwtDecode = require('jwt-decode');
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -94,9 +94,17 @@ const Profile = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
+  }; 
+  if (user.token) {
+    console.log('user---------------->',!!user)
+    const { token } = user;
+   console.log('user---------------->',token)
+  const decode = jwtDecode(token);
+   console.log('user---------------->',decode)
+  }
+  console.log(user)
+  
 
-  console.log('user----',user)
 
   const logOut = () => {
     localStorage.setItem('logged', false)
