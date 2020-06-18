@@ -95,11 +95,18 @@ const Profile = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   }; 
-  if (user.token) {
+  if (user.accessToken) {
+     const Token = user.refreshToken
+     console.log("-------------refreshToken", user.refreshToken)
+    function saveToken(token) {
+      localStorage.setItem('tokenData', JSON.stringify(token));
+  }
+   saveToken(Token) 
+
     console.log('user---------------->',!!user)
-    const { token } = user;
-   console.log('user---------------->',token)
-  const decode = jwtDecode(token);
+    const { accessToken } = user;
+   console.log('user---------------->',accessToken)
+  const decode = jwtDecode(accessToken);
    console.log('user---------------->',decode)
   }
   console.log(user)
@@ -261,8 +268,7 @@ const Profile = (props) => {
   );
 };
 const mapStateToProps = ({ user }) => {
-   console.log("USER STORE-----------",user)
-
+ console.log(user.token)
   return { user };
 };
 export default connect(mapStateToProps)(Profile);
