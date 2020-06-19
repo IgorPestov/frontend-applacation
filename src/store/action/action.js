@@ -5,5 +5,6 @@ const userPost = (newUser) => {
     }
 }
 export {
-    userPost
+    userPost,
+    
 };

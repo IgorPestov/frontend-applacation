@@ -55,8 +55,10 @@ const useStyles = makeStyles((theme) => ({
       if (user) {
         localStorage.setItem('logged', true)
         setUser(user);
-        props.history.push("/profile")
-        props.userPost(user)
+        localStorage.setItem("tokenData", JSON.stringify(user.refreshToken));
+        props.userPost(user.accessToken);
+        props.history.push("/profile");
+        console.log("SIGN",user.refreshToken)   
       }
     } catch (err) {
       return setErr(err.response);

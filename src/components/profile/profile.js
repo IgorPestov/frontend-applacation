@@ -21,7 +21,8 @@ import {
 import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-var jwtDecode = require('jwt-decode');
+import APIHelper from "../../APIHelper";
+var jwtDecode = require("jwt-decode");
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -94,32 +95,33 @@ const Profile = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  }; 
-  if (user.accessToken) {
-     const Token = user.refreshToken
-     console.log("-------------refreshToken", user.refreshToken)
-    function saveToken(token) {
-      localStorage.setItem('tokenData', JSON.stringify(token));
-  }
-   saveToken(Token) 
+  };
 
-    console.log('user---------------->',!!user)
-    const { accessToken } = user;
-   console.log('user---------------->',accessToken)
-  const decode = jwtDecode(accessToken);
-   console.log('user---------------->',decode)
-  }
-  console.log(user)
-  
+  const refreshToken = async (refreshToken) => {
+    const tokens = await APIHelper.refreshToken(refreshToken);
+    props.userPost(tokens.accessToken);
+    return localStorage.setItem(
+      "tokenData",
+      JSON.stringify(tokens.refreshToken)
+    );
+  };
 
+  // setInterval(() => {
+  //   let token = jwtDecode(user);
+  //   if (Date.now() >= token.exp * 1000) {
+  //     console.log('ENDNDNDNENDNENDNEND')
+  //     return refreshToken(JSON.parse(localStorage.getItem("tokenData")));
+  //   }
+  // }, 2000);
 
   const logOut = () => {
-    localStorage.setItem('logged', false)
-    if(!localStorage.setItem('logged', false)) {
-      props.history.push("/signIn")
+    localStorage.setItem("logged", false);
+
+    if (!localStorage.setItem("logged", false)) {
+      props.history.push("/signIn");
+      localStorage.clear("tokenData");
     }
-    
-  }
+  };
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -158,7 +160,9 @@ const Profile = (props) => {
           <Typography variant="h6" className={classes.title} noWrap>
             Profile
           </Typography>
-          <Button color="inherit" onClick={logOut}>logout</Button>
+          <Button color="inherit" onClick={logOut}>
+            logout
+          </Button>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -268,7 +272,16 @@ const Profile = (props) => {
   );
 };
 const mapStateToProps = ({ user }) => {
- console.log(user.token)
   return { user };
 };
-export default connect(mapStateToProps)(Profile);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userPost: (newUser) => {
+      dispatch({
+        type: "USER_POST",
+        payload: newUser,
+      });
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

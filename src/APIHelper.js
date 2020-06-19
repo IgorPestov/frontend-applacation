@@ -15,7 +15,7 @@ async function signInUser(email, password, id) {
   const { data: user } = await axios.post(API_URL + `${"signIn"}`, {
     email,
     password,
-    id
+    id,
   });
   return user;
 }
@@ -47,12 +47,25 @@ async function getDownloadFile(id) {
   const { data: files } = await axios.get(API_URL + `${id}`);
   return files;
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+async function refreshToken(refreshToken) {
+  const URL = "http://localhost:3000/user/refresh-tokens";
+
+  const { data: token } = await axios.post(URL, { refreshToken });
+  console.log();
+
+  return token;
+}
+/////////////////////////////////////////////////////////////////////////////////////////
+
 export default {
-  signInUser,
   signUpUser,
+  signInUser,
   showUserInfo,
   updateUserInfo,
   showFiles,
   putUnloadFile,
   getDownloadFile,
+  refreshToken,
 };
