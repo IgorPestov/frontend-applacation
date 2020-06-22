@@ -23,6 +23,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import APIHelper from "../../APIHelper";
 import jwtDecode from "jwt-decode";
+import { userPost } from "../../store/action/action";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -88,21 +89,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile = (props) => {
-  const { accessToken } = props;
+  const { accessToken, user } = props;
+  console.log(user)
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const [user, setUser] = useState([]);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-  const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
-  const userAccessToken = jwtDecode(token);
-  const refreshToken = async (refreshToken) => {
-    const tokens = await APIHelper.refreshToken(refreshToken);
-    props.tokenAccess(tokens.accessToken);
-    return localStorage.setItem("tokenData", JSON.stringify(tokens));
   };
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
@@ -110,9 +104,17 @@ const Profile = (props) => {
     }
     showUserInfo(userAccessToken.userId);
   }, []);
+  const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
+  const userAccessToken = jwtDecode(token);
+  const refreshToken = async (refreshToken) => {
+    const tokens = await APIHelper.refreshToken(refreshToken);
+    props.tokenAccess(tokens.accessToken);
+    return localStorage.setItem("tokenData", JSON.stringify(tokens));
+  };
+
   const showUserInfo = async (userId) => {
     const user = await APIHelper.showUserInfo(userId);
-    setUser(user);
+    props.userPost(user);
   };
   const logOut = () => {
     localStorage.setItem("logged", false);
@@ -121,12 +123,15 @@ const Profile = (props) => {
       localStorage.clear("tokenData");
     }
   };
+  const EditInfo = () => {
+    props.history.push("/updateUserInfo");
+  };
   const drawer = (
     <div>
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {["File", "Profile"].map((text, index) => (
+        {["Profile", "File"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemIcon>
               {index % 2 === 0 ? <Folder /> : <Person />}
@@ -228,6 +233,7 @@ const Profile = (props) => {
                     className={classes.input}
                     id="icon-button-edit"
                     type="button"
+                    onClick={EditInfo}
                   />
                   <label htmlFor="icon-button-edit">
                     <IconButton
@@ -248,21 +254,21 @@ const Profile = (props) => {
                 xs={12}
               >
                 <Grid>
-                  <Paper className={classes.paper}>{user.firstName}</Paper>
+                  <Paper className={classes.paper}>First name:</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>{user.lastName}</Paper>
+                  <Paper className={classes.paper}>Last name:</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>{user.age}</Paper>
+                  <Paper className={classes.paper}>Age: </Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>{user.gender}</Paper>
+                  <Paper className={classes.paper}>Gender: </Paper>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Paper className={classes.paper2}>{user.aboutYourself}</Paper>
+              <Paper className={classes.paper2}>About yourself:</Paper>
             </Grid>
           </Grid>
         </Container>
@@ -270,8 +276,8 @@ const Profile = (props) => {
     </div>
   );
 };
-const mapStateToProps = ({ accessToken }) => {
-  return { accessToken };
+const mapStateToProps = ({ accessToken, user}) => {
+  return { accessToken, user };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -279,6 +285,12 @@ const mapDispatchToProps = (dispatch) => {
       dispatch({
         type: "ACCESS_TOKEN_POST",
         payload: newTokens,
+      });
+    },
+    userPost: (newUser) => {
+      dispatch({
+        type: "USER_POST",
+        payload: newUser,
       });
     },
   };

@@ -1,5 +1,6 @@
 const initialState = {
   accessToken: {},
+  user: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -8,6 +9,10 @@ const reducer = (state = initialState, action) => {
       return {
         accessToken: action.payload,
       };
+      case "USER_POST": 
+      return {
+        user: action.payload,
+      }
     default:
       return state;
   }

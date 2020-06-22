@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
 import { connect } from "react-redux";
+import jwtDecode from "jwt-decode";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,7 +39,6 @@ const SignIn = (props) => {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState(null);
   const [errEmpty, seterrEmpty] = useState(null);
-
   const handleSubmit = () => {
     if (!email.trim() && !password.trim()) {
       return seterrEmpty("Empty fields");
@@ -53,14 +53,23 @@ const SignIn = (props) => {
       if (tokens) {
         localStorage.setItem("logged", true);
         localStorage.setItem("tokenData", JSON.stringify(tokens));
+        const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
+        const userAccessToken = jwtDecode(token);
+        showUserInfo(userAccessToken.userId);
         props.tokenAccess(tokens.accessToken);
-        props.history.push("/profile");
       }
     } catch (err) {
       return setErr(err.response);
     }
   };
-
+  const showUserInfo = async (userId) => {
+    const user = await APIHelper.showUserInfo(userId);
+    console.log(user);
+    props.userPost(user);
+    if(props.user._id){ 
+      console.log(!!(props.user._id))
+      props.history.push("/profile");}
+  };
   const classes = useStyles();
 
   return (
@@ -123,6 +132,9 @@ const SignIn = (props) => {
     </Container>
   );
 };
+const mapStateToProps = ({user}) => {
+  return { user };
+};
 const mapDispatchToProps = (dispatch) => {
   return {
     tokenAccess: (newTokenAccess) => {
@@ -131,7 +143,13 @@ const mapDispatchToProps = (dispatch) => {
         payload: newTokenAccess,
       });
     },
+    userPost: (newUser) => {
+      dispatch({
+        type: "USER_POST",
+        payload: newUser,
+      });
+    },
   };
 };
 
-export default connect(null, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

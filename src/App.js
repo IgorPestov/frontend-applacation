@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import SignIn from "./components/signIn";
-import Profile from "./components/profile";
+import Profile from "./components/profile/index";
 import SignUp from "./components/signUp";
+// import UpdateUserInfo from './components/profile/index'
 import { Provider } from "react-redux";
 import store from './store/store'
 
