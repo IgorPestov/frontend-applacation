@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import APIHelper from "../../APIHelper";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSignUp(props) {
+const SignInSignUp = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -63,8 +64,6 @@ export default function SignInSignUp(props) {
     return setPassword(event.target.value);
   };
   const changeFirstName = (event) => {
-    console.log(event.target.value.length != 0);
-
     setErrEmrty(null);
     if (
       !regFirstName.test(event.target.value) ||
@@ -92,9 +91,13 @@ export default function SignInSignUp(props) {
   };
   const signUpUser = async (email, password, firstName) => {
     try {
-      const user = await APIHelper.signUpUser(email, password, firstName);
-      setUser(user);
-      props.history.push("/profile")
+      const tokens = await APIHelper.signUpUser(email, password, firstName);
+      if (tokens) {
+        localStorage.setItem("logged", true);
+        localStorage.setItem("tokenData", JSON.stringify(tokens));
+        props.tokenAccess(tokens.accessToken);
+        props.history.push("/profile");
+      }
     } catch (err) {
       setErr(err.response);
     }
@@ -183,4 +186,15 @@ export default function SignInSignUp(props) {
       <Box mt={5}></Box>
     </Container>
   );
-}
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    tokenAccess: (newTokenAccess) => {
+      dispatch({
+        type: "ACCESS_TOKEN_POST",
+        payload: newTokenAccess,
+      });
+    },
+  };
+};
+export default connect(null, mapDispatchToProps)(SignInSignUp);
