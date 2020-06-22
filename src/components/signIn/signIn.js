@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
- const  SignIn = (props) => {
+const SignIn = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState([]);
@@ -50,15 +50,13 @@ const useStyles = makeStyles((theme) => ({
 
   const signInUser = async (email, password) => {
     try {
-      const user = await APIHelper.signInUser(email, password);
-
-      if (user) {
-        localStorage.setItem('logged', true)
-        setUser(user);
-        localStorage.setItem("tokenData", JSON.stringify(user.refreshToken));
-        props.userPost(user.accessToken);
+      const tokens = await APIHelper.signInUser(email, password);
+      if (tokens) {
+        localStorage.setItem("logged", true);
+        setUser(tokens);
+        localStorage.setItem("tokenData", JSON.stringify(tokens));
+        props.tokenAccess(tokens.accessToken);
         props.history.push("/profile");
-        console.log("SIGN",user.refreshToken)   
       }
     } catch (err) {
       return setErr(err.response);
@@ -126,16 +124,16 @@ const useStyles = makeStyles((theme) => ({
       <Box mt={8}></Box>
     </Container>
   );
-}
-    const mapDispatchToProps = (dispatch) => {
-      return {
-        userPost: (newUser) => {
-          dispatch({
-            type: "USER_POST",
-            payload: newUser
-          })
-        }
-      }
-    }
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    tokenAccess: (newTokenAccess) => {
+      dispatch({
+        type: "ACCESS_TOKEN_POST",
+        payload: newTokenAccess,
+      });
+    },
+  };
+};
 
-export default connect(null,mapDispatchToProps)(SignIn);
+export default connect(null, mapDispatchToProps)(SignIn);

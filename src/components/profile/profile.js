@@ -22,7 +22,7 @@ import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import APIHelper from "../../APIHelper";
-var jwtDecode = require("jwt-decode");
+import jwtDecode from "jwt-decode";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -88,35 +88,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile = (props) => {
-  const { user } = props;
+  const { accessToken } = props;
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const [user, setUser] = useState([]);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+  const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
+  const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
     const tokens = await APIHelper.refreshToken(refreshToken);
-    props.userPost(tokens.accessToken);
-    return localStorage.setItem(
-      "tokenData",
-      JSON.stringify(tokens.refreshToken)
-    );
+    props.tokenAccess(tokens.accessToken);
+    return localStorage.setItem("tokenData", JSON.stringify(tokens));
   };
-
-  // setInterval(() => {
-  //   let token = jwtDecode(user);
-  //   if (Date.now() >= token.exp * 1000) {
-  //     console.log('ENDNDNDNENDNENDNEND')
-  //     return refreshToken(JSON.parse(localStorage.getItem("tokenData")));
-  //   }
-  // }, 2000);
-
+  useEffect(() => {
+    if (Date.now() >= userAccessToken.exp * 1000) {
+      refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
+    }
+    showUserInfo(userAccessToken.userId);
+  }, []);
+  const showUserInfo = async (userId) => {
+    const user = await APIHelper.showUserInfo(userId);
+    setUser(user);
+  };
   const logOut = () => {
     localStorage.setItem("logged", false);
-
     if (!localStorage.setItem("logged", false)) {
       props.history.push("/signIn");
       localStorage.clear("tokenData");
@@ -249,21 +248,21 @@ const Profile = (props) => {
                 xs={12}
               >
                 <Grid>
-                  <Paper className={classes.paper}>firstName</Paper>
+                  <Paper className={classes.paper}>{user.firstName}</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>lastName</Paper>
+                  <Paper className={classes.paper}>{user.lastName}</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>age</Paper>
+                  <Paper className={classes.paper}>{user.age}</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>gender</Paper>
+                  <Paper className={classes.paper}>{user.gender}</Paper>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Paper className={classes.paper2}>aboutYourself</Paper>
+              <Paper className={classes.paper2}>{user.aboutYourself}</Paper>
             </Grid>
           </Grid>
         </Container>
@@ -271,15 +270,15 @@ const Profile = (props) => {
     </div>
   );
 };
-const mapStateToProps = ({ user }) => {
-  return { user };
+const mapStateToProps = ({ accessToken }) => {
+  return { accessToken };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    userPost: (newUser) => {
+    tokenAccess: (newTokens) => {
       dispatch({
-        type: "USER_POST",
-        payload: newUser,
+        type: "ACCESS_TOKEN_POST",
+        payload: newTokens,
       });
     },
   };

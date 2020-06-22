@@ -1,10 +1,10 @@
-const userPost = (newUser) => {
+const tokenAccess = (newTokenAccess) => {
     return {
-        type: "USER_POST",
-        payload: newUser
+        type: "ACCESS_TOKEN_POST",
+        payload: newTokenAccess
     }
 }
 export {
-    userPost,
+    tokenAccess,
     
 };

@@ -1,12 +1,12 @@
 const initialState = {
-  user: {},
+  accessToken: {},
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "USER_POST":
+    case "ACCESS_TOKEN_POST":
       return {
-        user: action.payload,
+        accessToken: action.payload,
       };
     default:
       return state;
