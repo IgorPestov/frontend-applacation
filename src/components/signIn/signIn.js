@@ -8,6 +8,7 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn(props) {
+const SignIn = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState([]);
@@ -49,11 +50,13 @@ export default function SignIn(props) {
 
   const signInUser = async (email, password) => {
     try {
-      const user = await APIHelper.signInUser(email, password);
-
-      if (user) {
-        setUser(user);
-        props.history.push("/profile")
+      const tokens = await APIHelper.signInUser(email, password);
+      if (tokens) {
+        localStorage.setItem("logged", true);
+        setUser(tokens);
+        localStorage.setItem("tokenData", JSON.stringify(tokens));
+        props.tokenAccess(tokens.accessToken);
+        props.history.push("/profile");
       }
     } catch (err) {
       return setErr(err.response);
@@ -121,4 +124,16 @@ export default function SignIn(props) {
       <Box mt={8}></Box>
     </Container>
   );
-}
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    tokenAccess: (newTokenAccess) => {
+      dispatch({
+        type: "ACCESS_TOKEN_POST",
+        payload: newTokenAccess,
+      });
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(SignIn);

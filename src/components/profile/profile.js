@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   CssBaseline,
@@ -20,8 +20,11 @@ import {
 } from "@material-ui/core";
 import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-const drawerWidth = 240;
+import { connect } from "react-redux";
+import APIHelper from "../../APIHelper";
+import jwtDecode from "jwt-decode";
 
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
   paper: {
@@ -84,15 +87,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Profile(props) {
+const Profile = (props) => {
+  const { accessToken } = props;
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const [user, setUser] = useState([]);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
+  const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
+  const userAccessToken = jwtDecode(token);
+  const refreshToken = async (refreshToken) => {
+    const tokens = await APIHelper.refreshToken(refreshToken);
+    props.tokenAccess(tokens.accessToken);
+    return localStorage.setItem("tokenData", JSON.stringify(tokens));
+  };
+  useEffect(() => {
+    if (Date.now() >= userAccessToken.exp * 1000) {
+      refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
+    }
+    showUserInfo(userAccessToken.userId);
+  }, []);
+  const showUserInfo = async (userId) => {
+    const user = await APIHelper.showUserInfo(userId);
+    setUser(user);
+  };
+  const logOut = () => {
+    localStorage.setItem("logged", false);
+    if (!localStorage.setItem("logged", false)) {
+      props.history.push("/signIn");
+      localStorage.clear("tokenData");
+    }
+  };
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -131,7 +159,9 @@ export default function Profile(props) {
           <Typography variant="h6" className={classes.title} noWrap>
             Profile
           </Typography>
-          <Button color="inherit">logout</Button>
+          <Button color="inherit" onClick={logOut}>
+            logout
+          </Button>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -205,7 +235,7 @@ export default function Profile(props) {
                       aria-label="upload picture"
                       component="span"
                     >
-                      <Edit/>
+                      <Edit />
                     </IconButton>
                   </label>
                 </Paper>
@@ -218,25 +248,39 @@ export default function Profile(props) {
                 xs={12}
               >
                 <Grid>
-                  <Paper className={classes.paper}>firstName</Paper>
+                  <Paper className={classes.paper}>{user.firstName}</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>lastName</Paper>
+                  <Paper className={classes.paper}>{user.lastName}</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>age</Paper>
+                  <Paper className={classes.paper}>{user.age}</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>gender</Paper>
+                  <Paper className={classes.paper}>{user.gender}</Paper>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Paper className={classes.paper2}>aboutYourself</Paper>
+              <Paper className={classes.paper2}>{user.aboutYourself}</Paper>
             </Grid>
           </Grid>
         </Container>
       </main>
     </div>
   );
-}
+};
+const mapStateToProps = ({ accessToken }) => {
+  return { accessToken };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    tokenAccess: (newTokens) => {
+      dispatch({
+        type: "ACCESS_TOKEN_POST",
+        payload: newTokens,
+      });
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
