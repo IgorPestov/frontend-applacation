@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
 const SignIn = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState([]);
   const [err, setErr] = useState(null);
   const [errEmpty, seterrEmpty] = useState(null);
 
@@ -53,7 +52,6 @@ const SignIn = (props) => {
       const tokens = await APIHelper.signInUser(email, password);
       if (tokens) {
         localStorage.setItem("logged", true);
-        setUser(tokens);
         localStorage.setItem("tokenData", JSON.stringify(tokens));
         props.tokenAccess(tokens.accessToken);
         props.history.push("/profile");
