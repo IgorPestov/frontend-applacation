@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   AppBar,
   CssBaseline,
@@ -20,10 +20,10 @@ import {
 } from "@material-ui/core";
 import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
 import jwtDecode from "jwt-decode";
-import { userPost } from "../../store/action/action";
+import actions from "../../store/action/action";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -89,12 +89,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile = (props) => {
-  const { accessToken, user } = props;
-  console.log(user)
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const {
+    firstName,
+    lastName,
+    age,
+    aboutYourself,
+    avatar,
+    gender,
+  } = useSelector((state) => state);
+  const dispatch = useDispatch();
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -108,13 +115,13 @@ const Profile = (props) => {
   const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
     const tokens = await APIHelper.refreshToken(refreshToken);
-    props.tokenAccess(tokens.accessToken);
     return localStorage.setItem("tokenData", JSON.stringify(tokens));
   };
+  console.log(firstName);
 
   const showUserInfo = async (userId) => {
     const user = await APIHelper.showUserInfo(userId);
-    props.userPost(user);
+    dispatch(actions.userPost(user));
   };
   const logOut = () => {
     localStorage.setItem("logged", false);
@@ -254,21 +261,25 @@ const Profile = (props) => {
                 xs={12}
               >
                 <Grid>
-                  <Paper className={classes.paper}>First name:</Paper>
+                  <Paper className={classes.paper}>
+                    First name: {firstName}
+                  </Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Last name:</Paper>
+                  <Paper className={classes.paper}>Last name: {lastName}</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Age: </Paper>
+                  <Paper className={classes.paper}>Age: {age} </Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Gender: </Paper>
+                  <Paper className={classes.paper}>Gender: {gender}</Paper>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Paper className={classes.paper2}>About yourself:</Paper>
+              <Paper className={classes.paper2}>
+                About yourself: {aboutYourself}
+              </Paper>
             </Grid>
           </Grid>
         </Container>
@@ -276,23 +287,5 @@ const Profile = (props) => {
     </div>
   );
 };
-const mapStateToProps = ({ accessToken, user}) => {
-  return { accessToken, user };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    tokenAccess: (newTokens) => {
-      dispatch({
-        type: "ACCESS_TOKEN_POST",
-        payload: newTokens,
-      });
-    },
-    userPost: (newUser) => {
-      dispatch({
-        type: "USER_POST",
-        payload: newUser,
-      });
-    },
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+
+export default Profile;

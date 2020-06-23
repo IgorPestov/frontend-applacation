@@ -1,18 +1,36 @@
-const initialState = {
-  accessToken: {},
-  user: {}
-};
+let initialState = {};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case "ACCESS_TOKEN_POST":
+    case "USER_POST":
       return {
-        accessToken: action.payload,
+        ...action.payload,
       };
-      case "USER_POST": 
+    case "EDIT_FIRST_NAME":
       return {
-        user: action.payload,
-      }
+        ...state,
+        firstName: action.payload,
+      };
+    case "EDIT_LAST_NAME":
+      return {
+        ...state,
+        lastName: action.payload,
+      };
+    case "EDIT_AGE":
+      return {
+        ...state,
+        age: action.payload,
+      };
+    case "EDIT_GENDER":
+      return {
+        ...state,
+        gender: action.payload,
+      };
+    case "EDIT_ABOUT_YOURSELF":
+      return {
+        ...state,
+        aboutYourself: action.payload,
+      };
     default:
       return state;
   }

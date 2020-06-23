@@ -40,7 +40,6 @@ const SignInSignUp = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
-  const [user, setUser] = useState([]);
   const [err, setErr] = useState(null);
   const [errEmpty, setErrEmrty] = useState(null);
   const [errEmail, setErrEmail] = useState(null);
@@ -67,7 +66,7 @@ const SignInSignUp = (props) => {
     setErrEmrty(null);
     if (
       !regFirstName.test(event.target.value) ||
-      event.target.value.length == 0
+      event.target.value.length === 0
     ) {
       return setErrFirstName("First name must be have no spaces");
     }

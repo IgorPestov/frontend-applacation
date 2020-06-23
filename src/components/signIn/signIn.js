@@ -8,8 +8,9 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import jwtDecode from "jwt-decode";
+import actions from "../../store/action/action";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,6 +40,7 @@ const SignIn = (props) => {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState(null);
   const [errEmpty, seterrEmpty] = useState(null);
+  const dispatch = useDispatch();
   const handleSubmit = () => {
     if (!email.trim() && !password.trim()) {
       return seterrEmpty("Empty fields");
@@ -50,13 +52,11 @@ const SignIn = (props) => {
   const signInUser = async (email, password) => {
     try {
       const tokens = await APIHelper.signInUser(email, password);
+      const userAccessToken = jwtDecode(tokens.accessToken);
+      showUserInfo(userAccessToken.userId);
       if (tokens) {
         localStorage.setItem("logged", true);
         localStorage.setItem("tokenData", JSON.stringify(tokens));
-        const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
-        const userAccessToken = jwtDecode(token);
-        showUserInfo(userAccessToken.userId);
-        props.tokenAccess(tokens.accessToken);
       }
     } catch (err) {
       return setErr(err.response);
@@ -64,11 +64,8 @@ const SignIn = (props) => {
   };
   const showUserInfo = async (userId) => {
     const user = await APIHelper.showUserInfo(userId);
-    console.log(user);
-    props.userPost(user);
-    if(props.user._id){ 
-      console.log(!!(props.user._id))
-      props.history.push("/profile");}
+    dispatch(actions.userPost(user));
+    props.history.push("/profile");
   };
   const classes = useStyles();
 
@@ -132,24 +129,5 @@ const SignIn = (props) => {
     </Container>
   );
 };
-const mapStateToProps = ({user}) => {
-  return { user };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    tokenAccess: (newTokenAccess) => {
-      dispatch({
-        type: "ACCESS_TOKEN_POST",
-        payload: newTokenAccess,
-      });
-    },
-    userPost: (newUser) => {
-      dispatch({
-        type: "USER_POST",
-        payload: newUser,
-      });
-    },
-  };
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default SignIn;
