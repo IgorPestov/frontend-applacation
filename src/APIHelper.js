@@ -53,7 +53,6 @@ async function refreshToken(refreshToken) {
   const URL = "http://localhost:3000/user/refresh-tokens";
 
   const { data: token } = await axios.post(URL, { refreshToken });
-  console.log();
 
   return token;
 }

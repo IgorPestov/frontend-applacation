@@ -93,14 +93,9 @@ const Profile = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const {
-    firstName,
-    lastName,
-    age,
-    aboutYourself,
-    avatar,
-    gender,
-  } = useSelector((state) => state);
+  const { firstName, lastName, age, aboutYourself, gender } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -117,7 +112,6 @@ const Profile = (props) => {
     const tokens = await APIHelper.refreshToken(refreshToken);
     return localStorage.setItem("tokenData", JSON.stringify(tokens));
   };
-  console.log(firstName);
 
   const showUserInfo = async (userId) => {
     const user = await APIHelper.showUserInfo(userId);

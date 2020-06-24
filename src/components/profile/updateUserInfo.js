@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   AppBar,
   CssBaseline,
@@ -108,21 +108,15 @@ const UpdateUserInfo = (props) => {
     dispatch(actions.userPost(user));
   };
 
-  const {
-    firstName,
-    lastName,
-    age,
-    gender,
-    _id,
-    avatar,
-    aboutYourself,
-  } = useSelector((state) => state);
+  const { firstName, lastName, age, gender, id, aboutYourself } = useSelector(
+    (state) => state.user
+  );
   const { window } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state);
+  const user = useSelector((state) => state.user);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -138,11 +132,9 @@ const UpdateUserInfo = (props) => {
     await APIHelper.updateUserInfo(id, payload);
   };
   const EditInfo = () => {
-    updateUserInfo(_id, user);
+    updateUserInfo(id, user);
     if (props.history.location.pathname === "/updateUserInfo") {
-      console.log("werwerwerwrrwrw", firstName);
       dispatch(actions.editFirstName(firstName));
-      console.log("sdfsdfsdfsdfsdf", user);
       props.history.push("/profile");
     }
   };
