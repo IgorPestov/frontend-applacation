@@ -17,6 +17,7 @@ import {
   Typography,
   Avatar,
   Button,
+  TextField,
 } from "@material-ui/core";
 import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -88,18 +89,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Profile = (props) => {
-  const { window } = props;
-  const classes = useStyles();
-  const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const { firstName, lastName, age, aboutYourself, gender } = useSelector(
-    (state) => state.user
-  );
-  const dispatch = useDispatch();
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+const UpdateUserInfo = (props) => {
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
@@ -117,6 +107,20 @@ const Profile = (props) => {
     const user = await APIHelper.showUserInfo(userId);
     dispatch(actions.userPost(user));
   };
+
+  const { firstName, lastName, age, gender, id, aboutYourself } = useSelector(
+    (state) => state.user
+  );
+  const { window } = props;
+  const classes = useStyles();
+  const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   const logOut = () => {
     localStorage.setItem("logged", false);
     if (!localStorage.setItem("logged", false)) {
@@ -124,8 +128,15 @@ const Profile = (props) => {
       localStorage.clear("tokenData");
     }
   };
+  const updateUserInfo = async (id, payload) => {
+    await APIHelper.updateUserInfo(id, payload);
+  };
   const EditInfo = () => {
-    props.history.push("/updateUserInfo");
+    updateUserInfo(id, user);
+    if (props.history.location.pathname === "/updateUserInfo") {
+      dispatch(actions.editFirstName(firstName));
+      props.history.push("/profile");
+    }
   };
   const drawer = (
     <div>
@@ -256,23 +267,63 @@ const Profile = (props) => {
               >
                 <Grid>
                   <Paper className={classes.paper}>
-                    First name: {firstName}
+                    First name:
+                    <TextField
+                      value={firstName}
+                      onChange={({ target }) =>
+                        dispatch(actions.editFirstName(target.value))
+                      }
+                    />
                   </Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Last name: {lastName}</Paper>
+                  <Paper className={classes.paper}>
+                    Last name:
+                    <TextField
+                      value={lastName}
+                      onChange={({ target }) =>
+                        dispatch(actions.editLastName(target.value))
+                      }
+                    />
+                  </Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Age: {age} </Paper>
+                  <Paper className={classes.paper}>
+                    Age:
+                    <TextField
+                      value={age}
+                      onChange={({ target }) =>
+                        dispatch(actions.editAge(target.value))
+                      }
+                    />
+                  </Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Gender: {gender}</Paper>
+                  <Paper className={classes.paper}>
+                    Gender:
+                    <TextField
+                      value={gender}
+                      onChange={({ target }) =>
+                        dispatch(actions.editGender(target.value))
+                      }
+                    />
+                  </Paper>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
               <Paper className={classes.paper2}>
-                About yourself: {aboutYourself}
+                About yourself:
+                <TextField
+                  id="outlined-multiline-static"
+                  multiline
+                  fullWidth
+                  variant="outlined"
+                  value={aboutYourself}
+                  onChange={({ target }) =>
+                    dispatch(actions.editAboitYourself(target.value))
+                  }
+                />
               </Paper>
             </Grid>
           </Grid>
@@ -282,4 +333,4 @@ const Profile = (props) => {
   );
 };
 
-export default Profile;
+export default UpdateUserInfo;

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3000/user/";
 
-async function signUpUser(email, password,firstName) {
+async function signUpUser(email, password, firstName) {
   const { data: newUser } = await axios.post(API_URL + `${"signUp"}`, {
     email,
     firstName,
@@ -27,7 +27,7 @@ async function showUserInfo(id) {
 }
 async function updateUserInfo(id, payload) {
   const { data: newUser } = await axios.put(
-    API_URL + `${"updateUserInfo"}` + `${id}`,
+    API_URL + `${"updateUserInfo/"}` + `${id}`,
     payload
   );
   return newUser;
@@ -53,7 +53,6 @@ async function refreshToken(refreshToken) {
   const URL = "http://localhost:3000/user/refresh-tokens";
 
   const { data: token } = await axios.post(URL, { refreshToken });
-  console.log();
 
   return token;
 }
