@@ -16,7 +16,6 @@ import actions from "../../store/action/action";
 import { HeaderProfile } from "../header";
 import Panel from "../panel";
 
-
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
@@ -96,7 +95,12 @@ const UpdateUserInfo = (props) => {
       props.history.push("/profile");
     }
   };
+  const saveAvatar = (e) => {
+   
+    console.log("132123232331",e.target.files[0]);
+  
 
+  };
   return (
     <div className={classes.root}>
       <HeaderProfile history={props.history} />
@@ -116,10 +120,12 @@ const UpdateUserInfo = (props) => {
                     className={classes.large}
                   />
                   <input
-                    accept="image/*"
+                    // accept="image/*"
                     className={classes.input}
                     id="icon-button-foto"
                     type="button"
+                    type="file"
+                    onChange={saveAvatar}
                   />
                   <label className={classes.edit} htmlFor="icon-button-foto">
                     <IconButton

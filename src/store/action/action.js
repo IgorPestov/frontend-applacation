@@ -33,7 +33,15 @@ const editAboitYourself = (aboutYorself) => {
     type: "EDIT_ABOUT_YOURSELF",
     payload: aboutYorself,
   };
+  
 };
+const saveAvatar = (avatar) => {
+  console.log(avatar.payload)
+  return {
+    type: "SAVE_AVATAR",
+    payload: avatar,
+  }
+}
 export default {
   userPost,
   editFirstName,
@@ -41,4 +49,5 @@ export default {
   editAge,
   editGender,
   editAboitYourself,
+  saveAvatar,
 };

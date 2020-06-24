@@ -56,6 +56,7 @@ const Files = (props) => {
         (state) => state.user
       );
 
+     
    return (
           <div className={classes.root}>
               <HeaderFiles history ={ props.history}/>
@@ -79,7 +80,7 @@ const Files = (props) => {
                     className={classes.input}
                     id="icon-button-edit"
                     type="button"
-                  
+                    
                   />
                   <label htmlFor="icon-button-edit">
                     <IconButton

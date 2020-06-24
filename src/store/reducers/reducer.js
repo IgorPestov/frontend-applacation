@@ -6,6 +6,7 @@ let initialState = {
     age: "",
     gender: "",
     aboutYourself: "",
+    avatar:{},
   },
 };
 
@@ -19,6 +20,7 @@ const reducer = (state = initialState, action) => {
         age,
         gender,
         aboutYourself,
+        avatar,
       } = action.payload;
       return {
         user: {
@@ -28,6 +30,7 @@ const reducer = (state = initialState, action) => {
           age,
           gender,
           aboutYourself,
+          avatar,
         },
       };
     case "EDIT_FIRST_NAME":
@@ -54,6 +57,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state.user,
         user: { ...state.user, aboutYourself: action.payload },
+      };
+      case "SAVE_AVATAR":
+      return {
+        ...state.user,
+        user: { ...state.user, avatar: action.payload} ,
       };
     default:
       return state;
