@@ -1,29 +1,13 @@
 import React, { useEffect } from "react";
-import {
-  AppBar,
-  CssBaseline,
-  Divider,
-  Drawer,
-  Hidden,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Container,
-  Grid,
-  Paper,
-  Toolbar,
-  Typography,
-  Avatar,
-  Button,
-} from "@material-ui/core";
-import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
+import { Edit, AddToPhotos } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
 import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
+import Panel from "../panel";
+import Header from "../header/header";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -43,31 +27,10 @@ const useStyles = makeStyles((theme) => ({
     maxWidht: 500,
     minHeight: 200,
   },
-  title: {
-    flexGrow: 1,
-  },
+ 
   root: {
     display: "flex",
   },
-  drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  appBar: {
-    [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
-    },
-  },
-  // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
@@ -89,17 +52,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile = (props) => {
-  const { window } = props;
   const classes = useStyles();
-  const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
   const { firstName, lastName, age, aboutYourself, gender } = useSelector(
     (state) => state.user
   );
   const dispatch = useDispatch();
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
@@ -117,89 +75,14 @@ const Profile = (props) => {
     const user = await APIHelper.showUserInfo(userId);
     dispatch(actions.userPost(user));
   };
-  const logOut = () => {
-    localStorage.setItem("logged", false);
-    if (!localStorage.setItem("logged", false)) {
-      props.history.push("/signIn");
-      localStorage.clear("tokenData");
-    }
-  };
+
   const EditInfo = () => {
     props.history.push("/updateUserInfo");
   };
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List>
-        {["Profile", "File"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <Folder /> : <Person />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-    </div>
-  );
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
-
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <Menu />
-          </IconButton>
-          <Typography variant="h6" className={classes.title} noWrap>
-            Profile
-          </Typography>
-          <Button color="inherit" onClick={logOut}>
-            logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+      <Header history={props.history} />
+      <Panel />
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Container className={classes.root}>
