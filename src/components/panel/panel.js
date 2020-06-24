@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
       flexShrink: 0,
     },
   },
-  // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
@@ -51,7 +50,7 @@ const Panel = (props) => {
             paper: classes.drawerPaper,
           }}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
         >
           <div>
