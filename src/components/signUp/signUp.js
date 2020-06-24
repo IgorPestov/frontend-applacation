@@ -11,7 +11,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import APIHelper from "../../APIHelper";
-import { connect } from "react-redux";
+import { useDispatch} from 'react-redux';
+import jwtDecode from 'jwt-decode'
+import actions from '../../store/action/action'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SignInSignUp = (props) => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -91,17 +94,21 @@ const SignInSignUp = (props) => {
   const signUpUser = async (email, password, firstName) => {
     try {
       const tokens = await APIHelper.signUpUser(email, password, firstName);
+      const userAccessToken = jwtDecode(tokens.accessToken);
+      showUserInfo(userAccessToken.userId);
       if (tokens) {
         localStorage.setItem("logged", true);
         localStorage.setItem("tokenData", JSON.stringify(tokens));
-        props.tokenAccess(tokens.accessToken);
-        props.history.push("/profile");
       }
     } catch (err) {
       setErr(err.response);
     }
   };
-
+  const showUserInfo = async (userId) => {
+    const user = await APIHelper.showUserInfo(userId);
+    dispatch(actions.userPost(user));
+    props.history.push("/profile");
+  };
   const classes = useStyles();
 
   return (
@@ -186,14 +193,5 @@ const SignInSignUp = (props) => {
     </Container>
   );
 };
-const mapDispatchToProps = (dispatch) => {
-  return {
-    tokenAccess: (newTokenAccess) => {
-      dispatch({
-        type: "ACCESS_TOKEN_POST",
-        payload: newTokenAccess,
-      });
-    },
-  };
-};
-export default connect(null, mapDispatchToProps)(SignInSignUp);
+
+export default SignInSignUp;
