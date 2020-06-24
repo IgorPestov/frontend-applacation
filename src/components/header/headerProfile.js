@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const Header = (props) => {
+const HeaderProfile = (props) => {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
@@ -71,4 +71,4 @@ const Header = (props) => {
     </div>
   );
 };
-export default Header;
+export default HeaderProfile;

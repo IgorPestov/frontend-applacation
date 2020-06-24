@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
-import { Edit } from "@material-ui/icons";
+import { CreateNewFolder } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
 import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
 import Panel from "../panel";
-import { HeaderProfile } from "../header/index";
+import { HeaderFiles } from "../header/index";;
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -50,40 +50,17 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
+const Files = (props) => {
+    const classes = useStyles();
+    const { firstName  } = useSelector(
+        (state) => state.user
+      );
 
-const Profile = (props) => {
-  const classes = useStyles();
-  const { firstName, lastName, age, aboutYourself, gender } = useSelector(
-    (state) => state.user
-  );
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (Date.now() >= userAccessToken.exp * 1000) {
-      refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
-    }
-    showUserInfo(userAccessToken.userId);
-  }, []);
-  const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
-  const userAccessToken = jwtDecode(token);
-  const refreshToken = async (refreshToken) => {
-    const tokens = await APIHelper.refreshToken(refreshToken);
-    return localStorage.setItem("tokenData", JSON.stringify(tokens));
-  };
-
-  const showUserInfo = async (userId) => {
-    const user = await APIHelper.showUserInfo(userId);
-    dispatch(actions.userPost(user));
-  };
-
-  const EditInfo = () => {
-    props.history.push("/updateUserInfo");
-  };
-  return (
-    <div className={classes.root}>
-      <HeaderProfile history={props.history} />
-      <Panel history={props.history} />
-      <main className={classes.content}>
+   return (
+          <div className={classes.root}>
+              <HeaderFiles history ={ props.history}/>
+              <Panel  history ={ props.history}/>
+              <main className={classes.content}>
         <div className={classes.toolbar} />
         <Container className={classes.root}>
           <Grid container className={classes.grid}>
@@ -102,7 +79,7 @@ const Profile = (props) => {
                     className={classes.input}
                     id="icon-button-edit"
                     type="button"
-                    onClick={EditInfo}
+                  
                   />
                   <label htmlFor="icon-button-edit">
                     <IconButton
@@ -110,7 +87,7 @@ const Profile = (props) => {
                       aria-label="upload picture"
                       component="span"
                     >
-                      <Edit />
+                      <CreateNewFolder />
                     </IconButton>
                   </label>
                 </Paper>
@@ -128,26 +105,25 @@ const Profile = (props) => {
                   </Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Last name: {lastName}</Paper>
+                  <Paper> name:</Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Age: {age} </Paper>
+                  <Paper>Age:  </Paper>
                 </Grid>
                 <Grid>
-                  <Paper className={classes.paper}>Gender: {gender}</Paper>
+                  <Paper>Gender: </Paper>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Paper className={classes.paper2}>
-                About yourself: {aboutYourself}
+              <Paper >
+                About yourself: 
               </Paper>
             </Grid>
           </Grid>
         </Container>
       </main>
-    </div>
-  );
+          </div>
+   )
 };
-
-export default Profile;
+export default Files;

@@ -1,2 +1,4 @@
-import Header from './header'
-export default Header;
+import HeaderFiles from './headerFiles'
+import HeaderProfile from './headerProfile'
+export  {HeaderFiles, HeaderProfile}
+
