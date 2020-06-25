@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = (props) => {
   const classes = useStyles();
-  const { firstName, lastName, age, aboutYourself, gender } = useSelector(
+  const { firstName, lastName, age, aboutYourself, gender, avatar } = useSelector(
     (state) => state.user
   );
   const dispatch = useDispatch();
@@ -94,7 +94,7 @@ const Profile = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    src={avatar}
                     className={classes.large}
                   />
                   <input

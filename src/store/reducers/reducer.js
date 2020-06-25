@@ -60,8 +60,9 @@ const reducer = (state = initialState, action) => {
       };
       case "SAVE_AVATAR":
       return {
+       
         ...state.user,
-        user: { ...state.user, avatar: action.payload} ,
+        user: { ...state.user, avatar: action.payload },
       };
     default:
       return state;

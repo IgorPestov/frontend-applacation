@@ -15,6 +15,7 @@ import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
 import { HeaderProfile } from "../header";
 import Panel from "../panel";
+import axios from "axios"
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -78,9 +79,15 @@ const UpdateUserInfo = (props) => {
     dispatch(actions.userPost(user));
   };
 
-  const { firstName, lastName, age, gender, id, aboutYourself } = useSelector(
-    (state) => state.user
-  );
+  const {
+    firstName,
+    lastName,
+    age,
+    gender,
+    id,
+    aboutYourself,
+    avatar,
+  } = useSelector((state) => state.user);
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -89,17 +96,24 @@ const UpdateUserInfo = (props) => {
     await APIHelper.updateUserInfo(id, payload);
   };
   const EditInfo = () => {
-    updateUserInfo(id, user);
+    console.log("USER--------------------------", user)
+    updateUserInfo(id,user );
     if (props.history.location.pathname === "/updateUserInfo") {
-      dispatch(actions.editFirstName(firstName));
       props.history.push("/profile");
     }
   };
-  const saveAvatar = (e) => {
-   
-    console.log("132123232331",e.target.files[0]);
-  
 
+  const saveAvatar = ({target: {files}}) => {
+    let data = new FormData()
+    data.append('file', files[0])
+     console.log(files[0])
+     createBase64Image(files[0])
+      const createBase64Image = (files)=> {
+          const reader = new FileReader();
+          console.log((reader.readAsBinaryString(files)))
+      }
+    //  dispatch(actions.saveAvatar(data))
+  
   };
   return (
     <div className={classes.root}>
@@ -116,42 +130,44 @@ const UpdateUserInfo = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    src={avatar}
                     className={classes.large}
                   />
-                  <input
-                    // accept="image/*"
-                    className={classes.input}
-                    id="icon-button-foto"
-                    type="button"
-                    type="file"
-                    onChange={saveAvatar}
-                  />
-                  <label className={classes.edit} htmlFor="icon-button-foto">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <AddAPhoto />
-                    </IconButton>
-                  </label>
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="icon-button-edit"
-                    type="button"
-                    onClick={EditInfo}
-                  />
-                  <label htmlFor="icon-button-edit">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <Save />
-                    </IconButton>
-                  </label>
+                  <form id="editUser">
+                    <input
+                      // accept="image/*"
+                      className={classes.input}
+                      id="icon-button-foto"
+                      type="file"
+                      onChange={saveAvatar}
+                    />
+                    <label className={classes.edit} htmlFor="icon-button-foto">
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <AddAPhoto />
+                      </IconButton>
+                    </label>
+
+                    <input
+                      accept="image/*"
+                      className={classes.input}
+                      id="icon-button-edit"
+                      type="button"
+                      onClick={EditInfo}
+                    />
+                    <label htmlFor="icon-button-edit">
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <Save />
+                      </IconButton>
+                    </label>
+                  </form>
                 </Paper>
               </Grid>
               <Grid

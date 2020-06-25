@@ -36,9 +36,9 @@ async function showFiles(id) {
   const { data: files } = await axios.get(API_URL + `${"showFiles"}` + `${id}`);
   return files;
 }
-async function putUnloadFile(id, payload) {
-  const { data: newFile } = await axios.put(
-    API_URL + `${"uploadFile"}` + `${id}`,
+async function postUnloadFile(id, payload) {
+  const { data: newFile } = await axios.post(
+    API_URL + `${"uploadFile/"}` + `${id}`,
     payload
   );
   return newFile;
@@ -64,7 +64,7 @@ export default {
   showUserInfo,
   updateUserInfo,
   showFiles,
-  putUnloadFile,
+  postUnloadFile,
   getDownloadFile,
   refreshToken,
 };

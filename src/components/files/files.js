@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Files = (props) => {
     const classes = useStyles();
-    const { firstName  } = useSelector(
+    const { firstName, avatar  } = useSelector(
         (state) => state.user
       );
 
@@ -72,7 +72,7 @@ const Files = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    src={avatar}
                     className={classes.large}
                   />
                   <input
