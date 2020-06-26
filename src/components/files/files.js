@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
-import { CreateNewFolder } from "@material-ui/icons";
+import { CreateNewFolder,Add } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
 import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
 import Panel from "../panel";
-import { HeaderFiles } from "../header/index";;
+import { HeaderFiles } from "../header/index";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -51,17 +51,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Files = (props) => {
-    const classes = useStyles();
-    const { firstName, avatar  } = useSelector(
-        (state) => state.user
-      );
-
-     
-   return (
-          <div className={classes.root}>
-              <HeaderFiles history ={ props.history}/>
-              <Panel  history ={ props.history}/>
-              <main className={classes.content}>
+  const [file, setFile] = useState("");
+  const [filename, setFilename] = useState("");
+  const classes = useStyles();
+  const { firstName, avatar } = useSelector((state) => state.user);
+  
+  return (
+    <div className={classes.root}>
+      <HeaderFiles history={props.history} />
+      <Panel history={props.history} />
+      <main className={classes.content}>
         <div className={classes.toolbar} />
         <Container className={classes.root}>
           <Grid container className={classes.grid}>
@@ -76,11 +75,13 @@ const Files = (props) => {
                     className={classes.large}
                   />
                   <input
-                    accept="image/*"
                     className={classes.input}
                     id="icon-button-edit"
-                    type="button"
-                    
+                    type="file"
+                    onChange={({ target }) => {
+                      setFile(target.files[0]);
+                      setFilename(target.files[0].name);
+                    }}
                   />
                   <label htmlFor="icon-button-edit">
                     <IconButton
@@ -89,6 +90,21 @@ const Files = (props) => {
                       component="span"
                     >
                       <CreateNewFolder />
+                    </IconButton>
+                  </label>
+                  <input
+                    className={classes.input}
+                    id="icon-button-edit"
+                    type= "button"
+                    
+                  />
+                  <label htmlFor="icon-button-edit">
+                    <IconButton
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <Add />
                     </IconButton>
                   </label>
                 </Paper>
@@ -109,7 +125,7 @@ const Files = (props) => {
                   <Paper> name:</Paper>
                 </Grid>
                 <Grid>
-                  <Paper>Age:  </Paper>
+                  <Paper>Age: </Paper>
                 </Grid>
                 <Grid>
                   <Paper>Gender: </Paper>
@@ -117,14 +133,12 @@ const Files = (props) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Paper >
-                About yourself: 
-              </Paper>
+              <Paper>About yourself:</Paper>
             </Grid>
           </Grid>
         </Container>
       </main>
-          </div>
-   )
+    </div>
+  );
 };
 export default Files;

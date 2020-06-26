@@ -9,6 +9,7 @@ import actions from "../../store/action/action";
 import Panel from "../panel";
 import { HeaderProfile } from "../header/index";
 
+
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
@@ -53,9 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = (props) => {
   const classes = useStyles();
-  const { firstName, lastName, age, aboutYourself, gender, avatar } = useSelector(
-    (state) => state.user
-  );
+ 
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -64,6 +63,7 @@ const Profile = (props) => {
     }
     showUserInfo(userAccessToken.userId);
   }, []);
+ 
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
@@ -75,10 +75,13 @@ const Profile = (props) => {
     const user = await APIHelper.showUserInfo(userId);
     dispatch(actions.userPost(user));
   };
-
+  const { firstName, lastName, age, aboutYourself, gender, avatar } = useSelector(
+    (state) => state.user
+  );
   const EditInfo = () => {
     props.history.push("/updateUserInfo");
   };
+  console.log(avatar.filePath)
   return (
     <div className={classes.root}>
       <HeaderProfile history={props.history} />

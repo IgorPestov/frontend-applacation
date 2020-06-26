@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {
   IconButton,
   Container,
@@ -15,7 +15,7 @@ import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
 import { HeaderProfile } from "../header";
 import Panel from "../panel";
-import axios from "axios"
+import axios from "axios";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -61,6 +61,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UpdateUserInfo = (props) => {
+  const [file, setFile] = useState('');
+  const [filename, setFilename] = useState('');
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
@@ -91,30 +93,35 @@ const UpdateUserInfo = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
   const updateUserInfo = async (id, payload) => {
     await APIHelper.updateUserInfo(id, payload);
   };
-  const EditInfo = () => {
-    console.log("USER--------------------------", user)
-    updateUserInfo(id,user );
+  const EditInfo = async () => {
+    const data = new FormData()
+    data.append('file', file)
+    data.append("url", URL.createObjectURL(file))
+    URL.createObjectURL(file)
+    
+    // const option = {
+    //  headers: {
+    //    'Content-Type': 'multipart/form-data'
+    //  }, 
+    // } 
+    postUserAvatar(id, data )
+    updateUserInfo(id, user);
     if (props.history.location.pathname === "/updateUserInfo") {
       props.history.push("/profile");
     }
   };
-
-  const saveAvatar = ({target: {files}}) => {
-    let data = new FormData()
-    data.append('file', files[0])
-     console.log(files[0])
-     createBase64Image(files[0])
-      const createBase64Image = (files)=> {
-          const reader = new FileReader();
-          console.log((reader.readAsBinaryString(files)))
-      }
-    //  dispatch(actions.saveAvatar(data))
-  
+  const postUserAvatar = async(id, payload,  ) => {
+         await APIHelper.postUserAvatar(id, payload, )
+  }
+  const saveAvatar = async (e) => {
+    setFile(e.target.files[0])
+    setFilename(e.target.files[0].name)
+     
   };
+
   return (
     <div className={classes.root}>
       <HeaderProfile history={props.history} />
