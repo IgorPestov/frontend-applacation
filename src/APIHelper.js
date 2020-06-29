@@ -30,26 +30,22 @@ async function updateUserInfo(id, payload) {
     API_URL + `${"updateUserInfo/"}` + `${id}`,
     payload
   );
-  console.log("newUser",newUser)
+  console.log("newUser", newUser);
   return newUser;
 }
 async function showFiles(id) {
   const { data: files } = await axios.get(API_URL + `${"showFiles"}` + `${id}`);
   return files;
 }
-async function postUnloadFile(id, payload, option) {
-   await axios.post(
-    API_URL + `${"uploadFile/"}` + `${id}`,
-    payload , option
-  );
-
+async function postUnloadFile(id, payload) {
+  await axios.post(API_URL + `${"uploadFile/"}` + `${id}`, payload);
 }
 async function getDownloadFile(id) {
   const { data: files } = await axios.get(API_URL + `${id}`);
   return files;
 }
-async function postUserAvatar(id, payload, ) {
-  axios.post(API_URL + `${"updateUserInfo/"}` + `${id}`, payload, )
+async function postUserAvatar(id, payload) {
+  await axios.post(API_URL + `${"updateUserInfo/"}` + `${id}`, payload);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 async function refreshToken(refreshToken) {
@@ -70,5 +66,5 @@ export default {
   postUnloadFile,
   getDownloadFile,
   refreshToken,
-  postUserAvatar
+  postUserAvatar,
 };

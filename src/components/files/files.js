@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
-import { CreateNewFolder,Add } from "@material-ui/icons";
+import { CreateNewFolder , Add } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
@@ -52,9 +52,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Files = (props) => {
   const [file, setFile] = useState("");
-  const [filename, setFilename] = useState("");
   const classes = useStyles();
-  const { firstName, avatar } = useSelector((state) => state.user);
+  const { firstName, avatar, id } = useSelector((state) => state.user);
+  // const option = {
+  //   headers: "Content-Type': 'multipart/form-data"
+  // }
+  
+  const toBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    
+  });
+
+  const saveFile  = async () => { 
+    
+    if(file) { 
+      const data = new FormData();
+      const base64File = await toBase64(file);
+      data.append("file", base64File.replace(/.+,/, ""));
+      postUnloadFile(id, data )
+      console.log(data, file)
+    }
+  }
+  const postUnloadFile = async (id, payload, ) => {
+    await APIHelper.postUnloadFile(id, payload  )
+ }
   
   return (
     <div className={classes.root}>
@@ -71,7 +97,7 @@ const Files = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src={avatar}
+                    src={`data:image/jpeg;base64,${avatar}`}
                     className={classes.large}
                   />
                   <input
@@ -80,7 +106,6 @@ const Files = (props) => {
                     type="file"
                     onChange={({ target }) => {
                       setFile(target.files[0]);
-                      setFilename(target.files[0].name);
                     }}
                   />
                   <label htmlFor="icon-button-edit">
@@ -94,15 +119,15 @@ const Files = (props) => {
                   </label>
                   <input
                     className={classes.input}
-                    id="icon-button-edit"
-                    type= "button"
-                    
+                    id="icon-button-add"
+                    type="button"
                   />
-                  <label htmlFor="icon-button-edit">
+                  <label htmlFor="icon-button-add">
                     <IconButton
                       color="primary"
                       aria-label="upload picture"
                       component="span"
+                      onClick={saveFile}
                     >
                       <Add />
                     </IconButton>
@@ -122,18 +147,15 @@ const Files = (props) => {
                   </Paper>
                 </Grid>
                 <Grid>
-                  <Paper> name:</Paper>
+                  <Paper> </Paper>
                 </Grid>
                 <Grid>
-                  <Paper>Age: </Paper>
+                  <Paper></Paper>
                 </Grid>
                 <Grid>
-                  <Paper>Gender: </Paper>
+                  <Paper></Paper>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper>About yourself:</Paper>
             </Grid>
           </Grid>
         </Container>

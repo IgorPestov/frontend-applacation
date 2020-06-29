@@ -81,7 +81,6 @@ const Profile = (props) => {
   const EditInfo = () => {
     props.history.push("/updateUserInfo");
   };
-  console.log(avatar.filePath)
   return (
     <div className={classes.root}>
       <HeaderProfile history={props.history} />
@@ -97,7 +96,7 @@ const Profile = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src={avatar}
+                    src={`data:image/jpeg;base64,${avatar}`}
                     className={classes.large}
                   />
                   <input

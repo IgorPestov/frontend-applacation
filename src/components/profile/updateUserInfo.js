@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Container,
@@ -15,7 +15,6 @@ import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
 import { HeaderProfile } from "../header";
 import Panel from "../panel";
-import axios from "axios";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -61,8 +60,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UpdateUserInfo = (props) => {
-  const [file, setFile] = useState('');
-  const [filename, setFilename] = useState('');
+  const [file, setFile] = useState("");
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
@@ -96,30 +94,35 @@ const UpdateUserInfo = (props) => {
   const updateUserInfo = async (id, payload) => {
     await APIHelper.updateUserInfo(id, payload);
   };
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      
+    });
+
   const EditInfo = async () => {
-    const data = new FormData()
-    data.append('file', file)
-    data.append("url", URL.createObjectURL(file))
-    URL.createObjectURL(file)
     
-    // const option = {
-    //  headers: {
-    //    'Content-Type': 'multipart/form-data'
-    //  }, 
-    // } 
-    postUserAvatar(id, data )
+    if (file) {
+    const data = new FormData();
+    const base64File = await toBase64(file);
+    data.append("file", base64File.replace(/.+,/, ""));
+      postUserAvatar(id, data);
+    }
+    console.log('work')
     updateUserInfo(id, user);
     if (props.history.location.pathname === "/updateUserInfo") {
       props.history.push("/profile");
     }
   };
-  const postUserAvatar = async(id, payload,  ) => {
-         await APIHelper.postUserAvatar(id, payload, )
-  }
+  const postUserAvatar = async (id, payload) => {
+    await APIHelper.postUserAvatar(id, payload);
+  };
   const saveAvatar = async (e) => {
-    setFile(e.target.files[0])
-    setFilename(e.target.files[0].name)
-     
+    setFile(e.target.files[0]);
   };
 
   return (
@@ -137,7 +140,7 @@ const UpdateUserInfo = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src={avatar}
+                    src={`data:image/jpeg;base64,${avatar}`}
                     className={classes.large}
                   />
                   <form id="editUser">
@@ -237,6 +240,7 @@ const UpdateUserInfo = (props) => {
                   id="outlined-multiline-static"
                   multiline
                   fullWidth
+                  placeholder="text here"
                   variant="outlined"
                   value={aboutYourself}
                   onChange={({ target }) =>
