@@ -96,7 +96,7 @@ const Profile = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src={`data:image/jpeg;base64,${avatar}`}
+                    // src={`data:image/jpeg;base64,${avatar}`}
                     className={classes.large}
                   />
                   <input

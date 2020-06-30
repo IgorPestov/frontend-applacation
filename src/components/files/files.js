@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
-import { CreateNewFolder , Add } from "@material-ui/icons";
+import { CreateNewFolder, Add } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
@@ -51,37 +51,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Files = (props) => {
+  const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
+  const userAccessToken = jwtDecode(token);
+  const dispatch = useDispatch();
   const [file, setFile] = useState("");
   const classes = useStyles();
   const { firstName, avatar, id } = useSelector((state) => state.user);
-  // const option = {
-  //   headers: "Content-Type': 'multipart/form-data"
-  // }
-  
-  const toBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    
-  });
 
-  const saveFile  = async () => { 
-    
-    if(file) { 
-      const data = new FormData();
-      const base64File = await toBase64(file);
-      data.append("file", base64File.replace(/.+,/, ""));
-      postUnloadFile(id, data )
-      console.log(data, file)
+  const refreshToken = async (refreshToken) => {
+    const tokens = await APIHelper.refreshToken(refreshToken);
+    return localStorage.setItem("tokenData", JSON.stringify(tokens));
+  };
+
+  useEffect(() => {
+    if (Date.now() >= userAccessToken.exp * 1000) {
+      refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
     }
+    showUserInfo(userAccessToken.userId);
+  }, []);
+
+  const showUserInfo = async (userId) => {
+    const user = await APIHelper.showUserInfo(userId);
+    dispatch(actions.userPost(user));
+  };
+
+  const saveFile = async (e) => {
+    e.preventDefault();
+
+    if (file) {
+      const data = new FormData();
+      data.append("file", file);
+      console.log(id, data, file);
+      postUnloadFile(id, data);
+    }
+  };
+
+  const postUnloadFile = async (id, payload) => {
+    await APIHelper.postUnloadFile(id, payload);
+  };
+
+const downloadddd = () => {
+
   }
-  const postUnloadFile = async (id, payload, ) => {
-    await APIHelper.postUnloadFile(id, payload  )
- }
-  
+
   return (
     <div className={classes.root}>
       <HeaderFiles history={props.history} />
@@ -97,7 +109,7 @@ const Files = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src={`data:image/jpeg;base64,${avatar}`}
+                    src='https://www.dropbox.com/s/7duy151a060xm6e/t45p9fh0x-u01021k8q9g-cddc98106831-512%20%281%29.png?raw=1'
                     className={classes.large}
                   />
                   <input
@@ -147,13 +159,9 @@ const Files = (props) => {
                   </Paper>
                 </Grid>
                 <Grid>
-                  <Paper> </Paper>
-                </Grid>
-                <Grid>
-                  <Paper></Paper>
-                </Grid>
-                <Grid>
-                  <Paper></Paper>
+                  <Paper> name </Paper>
+                  <Paper> size </Paper>
+                  <Paper> format </Paper>
                 </Grid>
               </Grid>
             </Grid>

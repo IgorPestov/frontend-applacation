@@ -91,6 +91,9 @@ const UpdateUserInfo = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const option = {
+    headers: "Content-Type': 'multipart/form-data"
+  }
   const updateUserInfo = async (id, payload) => {
     await APIHelper.updateUserInfo(id, payload);
   };
@@ -110,7 +113,8 @@ const UpdateUserInfo = (props) => {
     const data = new FormData();
     const base64File = await toBase64(file);
     data.append("file", base64File.replace(/.+,/, ""));
-      postUserAvatar(id, data);
+    
+      postUserAvatar(id, data,option);
     }
     console.log('work')
     updateUserInfo(id, user);
@@ -140,7 +144,7 @@ const UpdateUserInfo = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src={`data:image/jpeg;base64,${avatar}`}
+                    // src={`data:image/jpeg;base64,${avatar}`}
                     className={classes.large}
                   />
                   <form id="editUser">

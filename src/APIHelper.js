@@ -44,8 +44,8 @@ async function getDownloadFile(id) {
   const { data: files } = await axios.get(API_URL + `${id}`);
   return files;
 }
-async function postUserAvatar(id, payload) {
-  await axios.post(API_URL + `${"updateUserInfo/"}` + `${id}`, payload);
+async function postUserAvatar(id, payload, option) {
+  await axios.post(API_URL + `${"updateUserInfo/"}` + `${id}`, payload, option);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 async function refreshToken(refreshToken) {
