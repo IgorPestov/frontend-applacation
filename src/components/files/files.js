@@ -74,7 +74,6 @@ const Files = (props) => {
     const user = await APIHelper.showUserInfo(userId);
     dispatch(actions.userPost(user));
   };
-
   const saveFile = async (e) => {
     e.preventDefault();
 
@@ -109,7 +108,7 @@ const downloadddd = () => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src='https://www.dropbox.com/s/7duy151a060xm6e/t45p9fh0x-u01021k8q9g-cddc98106831-512%20%281%29.png?raw=1'
+                    src={avatar ?  avatar.url : null}
                     className={classes.large}
                   />
                   <input

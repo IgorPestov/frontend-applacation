@@ -36,7 +36,6 @@ const editAboitYourself = (aboutYorself) => {
   
 };
 const saveAvatar = (avatar) => {
-  console.log(avatar.payload)
   return {
     type: "SAVE_AVATAR",
     payload: avatar,

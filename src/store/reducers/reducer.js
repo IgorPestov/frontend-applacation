@@ -59,6 +59,7 @@ const reducer = (state = initialState, action) => {
         user: { ...state.user, aboutYourself: action.payload },
       };
       case "SAVE_AVATAR":
+        console.log("ACTION AVATAR", action.payload)
       return {
        
         ...state.user,

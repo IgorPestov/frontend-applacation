@@ -7,7 +7,7 @@ import {
   Avatar,
   TextField,
 } from "@material-ui/core";
-import { AddAPhoto, Save } from "@material-ui/icons";
+import { AddAPhoto, Save, Palette } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
@@ -91,43 +91,33 @@ const UpdateUserInfo = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const option = {
-    headers: "Content-Type': 'multipart/form-data"
-  }
-  const updateUserInfo = async (id, payload) => {
-    await APIHelper.updateUserInfo(id, payload);
-  };
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-      
-    });
-
-  const EditInfo = async () => {
-    
-    if (file) {
-    const data = new FormData();
-    const base64File = await toBase64(file);
-    data.append("file", base64File.replace(/.+,/, ""));
-    
-      postUserAvatar(id, data,option);
-    }
-    console.log('work')
-    updateUserInfo(id, user);
-    if (props.history.location.pathname === "/updateUserInfo") {
-      props.history.push("/profile");
-    }
-  };
   const postUserAvatar = async (id, payload) => {
     await APIHelper.postUserAvatar(id, payload);
   };
-  const saveAvatar = async (e) => {
-    setFile(e.target.files[0]);
+  const updateUserInfo = async (id, payload) => {
+    await APIHelper.updateUserInfo(id, payload);
   };
+  const loadAvatar = async (id, payload) => {
+    await APIHelper.loadAvatar(id, payload);
+  };
+  const EditInfo = async (e) => {
+    e.preventDefault();
+    console.log("work",file.name);
+    loadAvatar(id, file.name)
+    setTimeout(()=> { 
+      updateUserInfo(id, user) 
+    if (props.history.location.pathname === "/updateUserInfo") {
+      props.history.push("/profile");
+      
+    }}, 4000) 
+  
+  };
+
+  if (file) {
+    const data = new FormData();
+    data.append("file", file);
+    postUserAvatar(id, data)
+  }
 
   return (
     <div className={classes.root}>
@@ -144,7 +134,7 @@ const UpdateUserInfo = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    // src={`data:image/jpeg;base64,${avatar}`}
+                    src={avatar ? avatar.url : null}
                     className={classes.large}
                   />
                   <form id="editUser">
@@ -153,7 +143,10 @@ const UpdateUserInfo = (props) => {
                       className={classes.input}
                       id="icon-button-foto"
                       type="file"
-                      onChange={saveAvatar}
+                      onChange={({ target }) => {
+                        setFile(target.files[0]);
+                        // dispatch(actions.saveAvatar(target.files[0].name));
+                      }}
                     />
                     <label className={classes.edit} htmlFor="icon-button-foto">
                       <IconButton

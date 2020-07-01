@@ -54,9 +54,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = (props) => {
   const classes = useStyles();
- 
+  const { firstName, lastName, age, aboutYourself, gender, avatar } = useSelector(
+    (state) => state.user
+  );
+  
+  
   const dispatch = useDispatch();
-
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
@@ -75,9 +78,7 @@ const Profile = (props) => {
     const user = await APIHelper.showUserInfo(userId);
     dispatch(actions.userPost(user));
   };
-  const { firstName, lastName, age, aboutYourself, gender, avatar } = useSelector(
-    (state) => state.user
-  );
+ 
   const EditInfo = () => {
     props.history.push("/updateUserInfo");
   };
@@ -96,7 +97,7 @@ const Profile = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    // src={`data:image/jpeg;base64,${avatar}`}
+                    src={avatar ?  avatar.url : null} 
                     className={classes.large}
                   />
                   <input

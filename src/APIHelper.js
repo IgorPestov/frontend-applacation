@@ -30,7 +30,6 @@ async function updateUserInfo(id, payload) {
     API_URL + `${"updateUserInfo/"}` + `${id}`,
     payload
   );
-  console.log("newUser", newUser);
   return newUser;
 }
 async function showFiles(id) {
@@ -44,8 +43,12 @@ async function getDownloadFile(id) {
   const { data: files } = await axios.get(API_URL + `${id}`);
   return files;
 }
-async function postUserAvatar(id, payload, option) {
+async function postUserAvatar(id, payload,option) {
   await axios.post(API_URL + `${"updateUserInfo/"}` + `${id}`, payload, option);
+}
+async function loadAvatar ( id, payload) { 
+  const {data: avatar } = await axios.post(API_URL + `${"updateUserAvatar/"}` + `${id}`, {payload})
+  return avatar
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
 async function refreshToken(refreshToken) {
@@ -67,4 +70,5 @@ export default {
   getDownloadFile,
   refreshToken,
   postUserAvatar,
+  loadAvatar
 };
