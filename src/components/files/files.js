@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
+import {
+  IconButton,
+  Container,
+  Grid,
+  Paper,
+  Avatar,
+  Typography,
+  ButtonBase,
+} from "@material-ui/core";
 import { CreateNewFolder, Add } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,13 +29,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     marginBottom: 3,
   },
-  paper2: {
-    padding: theme.spacing(1),
-    marginTop: 3,
-    maxWidht: 500,
-    minHeight: 200,
-  },
-
   root: {
     display: "flex",
   },
@@ -49,6 +50,21 @@ const useStyles = makeStyles((theme) => ({
   edit: {
     flexGrow: 1,
   },
+  paperFiles: {
+    padding: theme.spacing(1),
+    marginTop: 3,
+    maxWidth: "auto",
+  },
+  image: {
+    width: 70,
+    height: 70,
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
 }));
 const Files = (props) => {
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
@@ -56,7 +72,7 @@ const Files = (props) => {
   const dispatch = useDispatch();
   const [file, setFile] = useState("");
   const classes = useStyles();
-  const { firstName, avatar, id } = useSelector((state) => state.user);
+  const { avatar, id } = useSelector((state) => state.user);
 
   const refreshToken = async (refreshToken) => {
     const tokens = await APIHelper.refreshToken(refreshToken);
@@ -76,11 +92,13 @@ const Files = (props) => {
   };
   const saveFile = async (e) => {
     e.preventDefault();
+    console.log(file);
 
     if (file) {
+      
+
       const data = new FormData();
       data.append("file", file);
-      console.log(id, data, file);
       postUnloadFile(id, data);
     }
   };
@@ -88,10 +106,6 @@ const Files = (props) => {
   const postUnloadFile = async (id, payload) => {
     await APIHelper.postUnloadFile(id, payload);
   };
-
-const downloadddd = () => {
-
-  }
 
   return (
     <div className={classes.root}>
@@ -101,14 +115,14 @@ const downloadddd = () => {
         <div className={classes.toolbar} />
         <Container className={classes.root}>
           <Grid container className={classes.grid}>
-            <Grid container>
+            <Grid container spacing={1}>
               <Grid item xs={12}>
                 <Paper className={classes.paper1}>
                   Avatar
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src={avatar ?  avatar.url : null}
+                    src={avatar ? avatar.url : null}
                     className={classes.large}
                   />
                   <input
@@ -116,7 +130,8 @@ const downloadddd = () => {
                     id="icon-button-edit"
                     type="file"
                     onChange={({ target }) => {
-                      setFile(target.files[0]);
+                      setFile(target.files[0])
+                      // setUserFile(target.files[0].name, target.files[0].size, target.files[0].type)
                     }}
                   />
                   <label htmlFor="icon-button-edit">
@@ -132,13 +147,14 @@ const downloadddd = () => {
                     className={classes.input}
                     id="icon-button-add"
                     type="button"
+                    onClick={saveFile}
+
                   />
                   <label htmlFor="icon-button-add">
                     <IconButton
                       color="primary"
                       aria-label="upload picture"
                       component="span"
-                      onClick={saveFile}
                     >
                       <Add />
                     </IconButton>
@@ -152,16 +168,36 @@ const downloadddd = () => {
                 item
                 xs={12}
               >
-                <Grid>
-                  <Paper className={classes.paper}>
-                    First name: {firstName}
-                  </Paper>
-                </Grid>
-                <Grid>
-                  <Paper> name </Paper>
-                  <Paper> size </Paper>
-                  <Paper> format </Paper>
-                </Grid>
+                
+                <Paper className={classes.paperFiles}>
+                  <Grid container spacing={2}>
+                    <Grid item>
+                      <ButtonBase className={classes.image}>
+                        <img
+                          className={classes.img}
+                          alt="complex"
+                          src="/static/images/grid/complex.jpg"
+                        />
+                      </ButtonBase>
+                    </Grid>
+                    <Grid item xs>
+                      <Typography gutterBottom variant="subtitle1">
+                        Name:
+                      </Typography>
+                      <Typography variant="body2" gutterBottom>
+                        Size:
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Type:
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="body2" style={{ cursor: "pointer" }}>
+                        Download
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
               </Grid>
             </Grid>
           </Grid>

@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     marginTop: 3,
     maxWidht: 500,
-    minHeight: 200,
+    minHeight: 100,
   },
 
   root: {

@@ -7,6 +7,7 @@ let initialState = {
     gender: "",
     aboutYourself: "",
     avatar:{},
+    files: {}
   },
 };
 
@@ -21,6 +22,7 @@ const reducer = (state = initialState, action) => {
         gender,
         aboutYourself,
         avatar,
+        files,
       } = action.payload;
       return {
         user: {
@@ -31,6 +33,7 @@ const reducer = (state = initialState, action) => {
           gender,
           aboutYourself,
           avatar,
+          files,
         },
       };
     case "EDIT_FIRST_NAME":
@@ -59,12 +62,17 @@ const reducer = (state = initialState, action) => {
         user: { ...state.user, aboutYourself: action.payload },
       };
       case "SAVE_AVATAR":
-        console.log("ACTION AVATAR", action.payload)
       return {
        
         ...state.user,
-        user: { ...state.user, avatar: action.payload },
+        user: { ...state.user, avatar:  action.payload },
       };
+      case "ADD_FILE_INFO":
+        console.log(action.payload)
+          return {
+            ...state.user, 
+            user: { ...state.uaer, files : action.payload}
+          };
     default:
       return state;
   }

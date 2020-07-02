@@ -7,7 +7,7 @@ import {
   Avatar,
   TextField,
 } from "@material-ui/core";
-import { AddAPhoto, Save, Palette } from "@material-ui/icons";
+import { AddAPhoto, Save } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     display: "none",
+    variant: "contained",
   },
   edit: {
     flexGrow: 1,
@@ -60,7 +61,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UpdateUserInfo = (props) => {
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
+  const [check, setCheck] = useState(false)
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
@@ -91,32 +93,36 @@ const UpdateUserInfo = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+
   const postUserAvatar = async (id, payload) => {
     await APIHelper.postUserAvatar(id, payload);
   };
   const updateUserInfo = async (id, payload) => {
     await APIHelper.updateUserInfo(id, payload);
   };
-  const loadAvatar = async (id, payload) => {
-    await APIHelper.loadAvatar(id, payload);
-  };
+
   const EditInfo = async (e) => {
     e.preventDefault();
-    console.log("work",file.name);
-    loadAvatar(id, file.name)
-    setTimeout(()=> { 
-      updateUserInfo(id, user) 
-    if (props.history.location.pathname === "/updateUserInfo") {
-      props.history.push("/profile");
-      
-    }}, 4000) 
-  
+
+    updateUserInfo(id, user);
+    setTimeout(() => {
+      if (props.history.location.pathname === "/updateUserInfo") {
+        props.history.push("/profile");
+      }
+    }, 2000);
   };
 
   if (file) {
+    setCheck(true)
     const data = new FormData();
     data.append("file", file);
-    postUserAvatar(id, data)
+    postUserAvatar(id, data);
+
+    setTimeout(() => {
+      dispatch(actions.saveAvatar(file.name))
+      setCheck(false);
+    }, 2000);
+    setFile(null);
   }
 
   return (
@@ -139,7 +145,7 @@ const UpdateUserInfo = (props) => {
                   />
                   <form id="editUser">
                     <input
-                      // accept="image/*"
+                      accept="image/*"
                       className={classes.input}
                       id="icon-button-foto"
                       type="file"
@@ -159,7 +165,6 @@ const UpdateUserInfo = (props) => {
                     </label>
 
                     <input
-                      accept="image/*"
                       className={classes.input}
                       id="icon-button-edit"
                       type="button"
@@ -170,6 +175,7 @@ const UpdateUserInfo = (props) => {
                         color="primary"
                         aria-label="upload picture"
                         component="span"
+                        disabled = {check}
                       >
                         <Save />
                       </IconButton>

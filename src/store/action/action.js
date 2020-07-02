@@ -41,6 +41,12 @@ const saveAvatar = (avatar) => {
     payload: avatar,
   }
 }
+const addFileInfo = (file) => {
+  return {
+    type: "ADD_FILE_INFO",
+    payload: file,
+  }
+}  
 export default {
   userPost,
   editFirstName,
@@ -49,4 +55,5 @@ export default {
   editGender,
   editAboitYourself,
   saveAvatar,
+  addFileInfo
 };

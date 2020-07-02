@@ -46,10 +46,7 @@ async function getDownloadFile(id) {
 async function postUserAvatar(id, payload,option) {
   await axios.post(API_URL + `${"updateUserInfo/"}` + `${id}`, payload, option);
 }
-async function loadAvatar ( id, payload) { 
-  const {data: avatar } = await axios.post(API_URL + `${"updateUserAvatar/"}` + `${id}`, {payload})
-  return avatar
-}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 async function refreshToken(refreshToken) {
   const URL = "http://localhost:3000/user/refresh-tokens";
@@ -70,5 +67,5 @@ export default {
   getDownloadFile,
   refreshToken,
   postUserAvatar,
-  loadAvatar
+  
 };
