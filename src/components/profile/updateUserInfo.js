@@ -63,24 +63,6 @@ const useStyles = makeStyles((theme) => ({
 const UpdateUserInfo = (props) => {
   const [file, setFile] = useState(null);
   const [check, setCheck] = useState(false)
-  useEffect(() => {
-    if (Date.now() >= userAccessToken.exp * 1000) {
-      refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
-    }
-    showUserInfo(userAccessToken.userId);
-  }, []);
-  const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
-  const userAccessToken = jwtDecode(token);
-  const refreshToken = async (refreshToken) => {
-    const tokens = await APIHelper.refreshToken(refreshToken);
-    return localStorage.setItem("tokenData", JSON.stringify(tokens));
-  };
-
-  const showUserInfo = async (userId) => {
-    const user = await APIHelper.showUserInfo(userId);
-    dispatch(actions.userPost(user));
-  };
-
   const {
     firstName,
     lastName,
@@ -93,6 +75,25 @@ const UpdateUserInfo = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  useEffect(() => {
+    if (Date.now() >= userAccessToken.exp * 1000) {
+      refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
+    }
+    showUserInfo(userAccessToken.userId);
+  }, [dispatch]);
+  const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
+  const userAccessToken = jwtDecode(token);
+  const refreshToken = async (refreshToken) => {
+    const tokens = await APIHelper.refreshToken(refreshToken);
+    return localStorage.setItem("tokenData", JSON.stringify(tokens));
+  };
+
+  const showUserInfo = async (userId) => {
+    const user = await APIHelper.showUserInfo(userId);
+    dispatch(actions.userPost(user));
+  };
+
+
 
   const postUserAvatar = async (id, payload) => {
     await APIHelper.postUserAvatar(id, payload);
@@ -117,9 +118,12 @@ const UpdateUserInfo = (props) => {
     const data = new FormData();
     data.append("file", file);
     postUserAvatar(id, data);
+    dispatch(actions.saveAvatar(file.name))
 
     setTimeout(() => {
       dispatch(actions.saveAvatar(file.name))
+
+
       setCheck(false);
     }, 2000);
     setFile(null);
@@ -151,7 +155,6 @@ const UpdateUserInfo = (props) => {
                       type="file"
                       onChange={({ target }) => {
                         setFile(target.files[0]);
-                        // dispatch(actions.saveAvatar(target.files[0].name));
                       }}
                     />
                     <label className={classes.edit} htmlFor="icon-button-foto">

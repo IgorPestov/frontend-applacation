@@ -7,7 +7,7 @@ let initialState = {
     gender: "",
     aboutYourself: "",
     avatar:{},
-    files: {}
+    files: []
   },
 };
 
@@ -68,7 +68,6 @@ const reducer = (state = initialState, action) => {
         user: { ...state.user, avatar:  action.payload },
       };
       case "ADD_FILE_INFO":
-        console.log(action.payload)
           return {
             ...state.user, 
             user: { ...state.uaer, files : action.payload}

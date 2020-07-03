@@ -33,17 +33,23 @@ async function updateUserInfo(id, payload) {
   return newUser;
 }
 async function showFiles(id) {
-  const { data: files } = await axios.get(API_URL + `${"showFiles"}` + `${id}`);
+  const { data: files } = await axios.get(
+    API_URL + `${"showFiles/"}` + `${id}`
+  );
   return files;
 }
 async function postUnloadFile(id, payload) {
-  await axios.post(API_URL + `${"uploadFile/"}` + `${id}`, payload);
-}
-async function getDownloadFile(id) {
-  const { data: files } = await axios.get(API_URL + `${id}`);
+  const { data: files } = await axios.post(
+    API_URL + `${"uploadFile/"}` + `${id}`,
+    payload
+  );
   return files;
 }
-async function postUserAvatar(id, payload,option) {
+async function getDownloadFile(id,filePath) {
+  const { data: files } = await axios.post(API_URL + `${"downloadFile/"}` + `${id}`,{filePath});
+  return files;
+}
+async function postUserAvatar(id, payload, option) {
   await axios.post(API_URL + `${"updateUserInfo/"}` + `${id}`, payload, option);
 }
 
@@ -67,5 +73,4 @@ export default {
   getDownloadFile,
   refreshToken,
   postUserAvatar,
-  
 };

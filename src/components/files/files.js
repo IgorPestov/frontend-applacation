@@ -7,8 +7,15 @@ import {
   Avatar,
   Typography,
   ButtonBase,
+  Button,
 } from "@material-ui/core";
-import { CreateNewFolder, Add } from "@material-ui/icons";
+import {
+  CreateNewFolder,
+  Add,
+  CloudUpload,
+  Delete,
+  Save,
+} from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
@@ -57,54 +64,137 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     width: 70,
-    height: 70,
+    height: 100,
   },
   img: {
-    margin: 'auto',
-    display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    margin: "auto",
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: "100%",
+  },
+  button: {
+    display: "colums",
+    margin: theme.spacing(1),
+  },
+  buttonGrid: {
+    direction: "column",
+    alignItems: "flex-end",
   },
 }));
 const Files = (props) => {
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const dispatch = useDispatch();
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
   const classes = useStyles();
-  const { avatar, id } = useSelector((state) => state.user);
 
+  const { avatar, id, files } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state);
   const refreshToken = async (refreshToken) => {
     const tokens = await APIHelper.refreshToken(refreshToken);
     return localStorage.setItem("tokenData", JSON.stringify(tokens));
   };
 
   useEffect(() => {
+    const showUserInfo = async (id) => {
+      const user = await APIHelper.showUserInfo(id);
+      dispatch(actions.userPost(user));
+    };
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
     }
     showUserInfo(userAccessToken.userId);
   }, []);
 
-  const showUserInfo = async (userId) => {
-    const user = await APIHelper.showUserInfo(userId);
-    dispatch(actions.userPost(user));
+  const getDownloadFile = async (id, payload) => {
+    const user = await APIHelper.getDownloadFile(id, payload);
+    // dispatch(actions.userPost(user));
   };
-  const saveFile = async (e) => {
-    e.preventDefault();
-    console.log(file);
 
+  const saveFile = () => {
     if (file) {
-      
-
       const data = new FormData();
       data.append("file", file);
       postUnloadFile(id, data);
+      
+      setFile(null);
     }
   };
-
   const postUnloadFile = async (id, payload) => {
-    await APIHelper.postUnloadFile(id, payload);
+    const user = await APIHelper.postUnloadFile(id, payload);
+    setTimeout(() => {
+       const objFile = user.files[user.files.length -1]
+      getDownloadFile(id,objFile.filePath);
+    }, 2000);
+    dispatch(actions.userPost(user));
+  };
+
+  const Files = () => {
+    return (
+      <Container>
+        {files.length > 0 ? (
+          files.map((file) => {
+            const { name, size, type, _id } = file;
+            return (
+              <Paper key={_id} className={classes.paperFiles}>
+                <Grid container spacing={2}>
+                  <Grid item>
+                    <ButtonBase className={classes.image}>
+                      <img
+                        className={classes.img}
+                        alt="complex"
+                        src="/static/images/grid/complex.jpg"
+                      />
+                    </ButtonBase>
+                  </Grid>
+                  <Grid item xs>
+                    <Typography gutterBottom variant="subtitle1">
+                      Name: {name}
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      Size: {size / Math.pow(1024, 2)}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      Type: {type}
+                    </Typography>
+                  </Grid>
+                  <Grid item className={classes.buttonGrid}>
+                    <Grid>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="default"
+                        className={classes.button}
+                        startIcon={<CloudUpload />}
+                      >
+                        Upload
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="default"
+                        className={classes.button}
+                        startIcon={<Delete />}
+                      >
+                        Delete
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Paper>
+            );
+          })
+        ) : (
+          <Paper>
+            <Typography gutterBottom variant="subtitle1">
+              Files is empty
+            </Typography>
+          </Paper>
+        )}
+      </Container>
+    );
   };
 
   return (
@@ -129,10 +219,7 @@ const Files = (props) => {
                     className={classes.input}
                     id="icon-button-edit"
                     type="file"
-                    onChange={({ target }) => {
-                      setFile(target.files[0])
-                      // setUserFile(target.files[0].name, target.files[0].size, target.files[0].type)
-                    }}
+                    onChange={({ target }) => setFile(target.files[0])}
                   />
                   <label htmlFor="icon-button-edit">
                     <IconButton
@@ -143,22 +230,16 @@ const Files = (props) => {
                       <CreateNewFolder />
                     </IconButton>
                   </label>
-                  <input
-                    className={classes.input}
-                    id="icon-button-add"
-                    type="button"
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    className={classes.button}
+                    startIcon={<Save />}
                     onClick={saveFile}
-
-                  />
-                  <label htmlFor="icon-button-add">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <Add />
-                    </IconButton>
-                  </label>
+                  >
+                    Save
+                  </Button>
                 </Paper>
               </Grid>
               <Grid
@@ -168,36 +249,7 @@ const Files = (props) => {
                 item
                 xs={12}
               >
-                
-                <Paper className={classes.paperFiles}>
-                  <Grid container spacing={2}>
-                    <Grid item>
-                      <ButtonBase className={classes.image}>
-                        <img
-                          className={classes.img}
-                          alt="complex"
-                          src="/static/images/grid/complex.jpg"
-                        />
-                      </ButtonBase>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography gutterBottom variant="subtitle1">
-                        Name:
-                      </Typography>
-                      <Typography variant="body2" gutterBottom>
-                        Size:
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Type:
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="body2" style={{ cursor: "pointer" }}>
-                        Download
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Paper>
+                <Files />
               </Grid>
             </Grid>
           </Grid>
