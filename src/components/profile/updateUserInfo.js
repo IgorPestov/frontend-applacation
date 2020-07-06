@@ -80,7 +80,7 @@ const UpdateUserInfo = (props) => {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
     }
     showUserInfo(userAccessToken.userId);
-  }, [dispatch]);
+  }, []);
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
@@ -96,7 +96,12 @@ const UpdateUserInfo = (props) => {
 
 
   const postUserAvatar = async (id, payload) => {
-    await APIHelper.postUserAvatar(id, payload);
+    const avatar = await APIHelper.postUserAvatar(id, payload);
+     if(avatar) {
+      setCheck(false);
+      dispatch(actions.saveAvatar(avatar))
+     }
+
   };
   const updateUserInfo = async (id, payload) => {
     await APIHelper.updateUserInfo(id, payload);
@@ -104,13 +109,11 @@ const UpdateUserInfo = (props) => {
 
   const EditInfo = async (e) => {
     e.preventDefault();
-
     updateUserInfo(id, user);
-    setTimeout(() => {
+   
       if (props.history.location.pathname === "/updateUserInfo") {
         props.history.push("/profile");
       }
-    }, 2000);
   };
 
   if (file) {
@@ -118,14 +121,7 @@ const UpdateUserInfo = (props) => {
     const data = new FormData();
     data.append("file", file);
     postUserAvatar(id, data);
-    dispatch(actions.saveAvatar(file.name))
 
-    setTimeout(() => {
-      dispatch(actions.saveAvatar(file.name))
-
-
-      setCheck(false);
-    }, 2000);
     setFile(null);
   }
 

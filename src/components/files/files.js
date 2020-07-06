@@ -106,10 +106,6 @@ const Files = (props) => {
     showUserInfo(userAccessToken.userId);
   }, []);
 
-  const getDownloadFile = async (id, payload) => {
-    const user = await APIHelper.getDownloadFile(id, payload);
-    // dispatch(actions.userPost(user));
-  };
 
   const saveFile = () => {
     if (file) {
@@ -121,13 +117,9 @@ const Files = (props) => {
     }
   };
   const postUnloadFile = async (id, payload) => {
-    const user = await APIHelper.postUnloadFile(id, payload);
-    setTimeout(() => {
-       const objFile = user.files[user.files.length -1]
-      getDownloadFile(id,objFile.filePath);
-    }, 2000);
-    dispatch(actions.userPost(user));
-  };
+    const filesUser = await APIHelper.postUnloadFile(id, payload);
+           console.log(filesUser)
+   };
 
   const Files = () => {
     return (

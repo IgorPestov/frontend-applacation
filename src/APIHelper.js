@@ -19,6 +19,11 @@ async function signInUser(email, password, id) {
   });
   return user;
 }
+async function postUserAvatar(id, payload, option) {
+  const {data : avatar} = await axios.post(API_URL + `${"postUserAvatar/"}` + `${id}`, payload, option);
+  return avatar
+}
+
 async function showUserInfo(id) {
   const { data: user } = await axios.get(
     API_URL + `${"showUserInfo/"}` + `${id}`
@@ -48,9 +53,6 @@ async function postUnloadFile(id, payload) {
 async function getDownloadFile(id,filePath) {
   const { data: files } = await axios.post(API_URL + `${"downloadFile/"}` + `${id}`,{filePath});
   return files;
-}
-async function postUserAvatar(id, payload, option) {
-  await axios.post(API_URL + `${"updateUserInfo/"}` + `${id}`, payload, option);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
