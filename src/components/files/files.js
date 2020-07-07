@@ -11,10 +11,11 @@ import {
 } from "@material-ui/core";
 import {
   CreateNewFolder,
-  Add,
+  Archive,
   CloudUpload,
   Delete,
   Save,
+  Description,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -82,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Files = (props) => {
+  const [check, setCheck] = useState(false);
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const dispatch = useDispatch();
@@ -96,48 +98,67 @@ const Files = (props) => {
   };
 
   useEffect(() => {
-    const showUserInfo = async (id) => {
-      const user = await APIHelper.showUserInfo(id);
-      dispatch(actions.userPost(user));
-    };
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
     }
     showUserInfo(userAccessToken.userId);
   }, []);
-
-
-  const saveFile = () => {
-    if (file) {
-      const data = new FormData();
-      data.append("file", file);
-      postUnloadFile(id, data);
-      
-      setFile(null);
-    }
-  };
   const postUnloadFile = async (id, payload) => {
     const filesUser = await APIHelper.postUnloadFile(id, payload);
-           console.log(filesUser)
-   };
+    if (filesUser) {
+      setCheck(false);
+    }
+  };
+  const deleteFile = async (id, paylod) => {
+    const filesUser = await APIHelper.deleteFile(id, paylod);
+    console.log(filesUser)
+     if(filesUser) {
+       dispatch(actions.userPost(filesUser))
+     }
+     
+  };
+  const delFile = (e) => {
+    e.preventDefault();
+    const idFile = e.currentTarget.id;
+    const path = e.currentTarget.value;
+    const data = new FormData();
+    data.append("idFile", idFile);
+    data.append("path", path);
+
+    deleteFile(id, data);
+  };
+  const showUserInfo = async (id) => {
+    const user = await APIHelper.showUserInfo(id);
+    dispatch(actions.userPost(user));
+  };
+  const saveFile = (e) => {
+    e.preventDefault();
+    showUserInfo(id, user);
+  };
+  if (file) {
+    setCheck(true);
+    const data = new FormData();
+    data.append("file", file);
+    postUnloadFile(id, data);
+    setFile(null);
+  }
 
   const Files = () => {
     return (
       <Container>
         {files.length > 0 ? (
           files.map((file) => {
-            const { name, size, type, _id } = file;
+            const { name, size, mimetype, _id, urlImg, url, filePath } = file;
+
+            const Img1 = mimetype === "image/png" ? urlImg : null;
             return (
               <Paper key={_id} className={classes.paperFiles}>
                 <Grid container spacing={2}>
                   <Grid item>
-                    <ButtonBase className={classes.image}>
-                      <img
-                        className={classes.img}
-                        alt="complex"
-                        src="/static/images/grid/complex.jpg"
-                      />
-                    </ButtonBase>
+                    {/* <ButtonBase className={classes.image}> */}
+                    <Avatar src={Img1}></Avatar>
+                    {/* <img className={classes.img} alt="complex"  /> */}
+                    {/* </ButtonBase> */}
                   </Grid>
                   <Grid item xs>
                     <Typography gutterBottom variant="subtitle1">
@@ -147,7 +168,7 @@ const Files = (props) => {
                       Size: {size / Math.pow(1024, 2)}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                      Type: {type}
+                      Type: {mimetype}
                     </Typography>
                   </Grid>
                   <Grid item className={classes.buttonGrid}>
@@ -156,6 +177,7 @@ const Files = (props) => {
                         size="small"
                         variant="contained"
                         color="default"
+                        href={url}
                         className={classes.button}
                         startIcon={<CloudUpload />}
                       >
@@ -164,11 +186,13 @@ const Files = (props) => {
                     </Grid>
                     <Grid item>
                       <Button
+                        id={_id}
                         size="small"
                         variant="contained"
-                        color="default"
+                        value = {filePath}
                         className={classes.button}
                         startIcon={<Delete />}
+                        onClick={delFile}
                       >
                         Delete
                       </Button>
@@ -200,7 +224,6 @@ const Files = (props) => {
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 <Paper className={classes.paper1}>
-                  Avatar
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
@@ -228,6 +251,7 @@ const Files = (props) => {
                     size="small"
                     className={classes.button}
                     startIcon={<Save />}
+                    disabled={check}
                     onClick={saveFile}
                   >
                     Save

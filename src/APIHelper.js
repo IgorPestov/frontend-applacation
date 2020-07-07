@@ -50,8 +50,8 @@ async function postUnloadFile(id, payload) {
   );
   return files;
 }
-async function getDownloadFile(id,filePath) {
-  const { data: files } = await axios.post(API_URL + `${"downloadFile/"}` + `${id}`,{filePath});
+async function deleteFile(id,payload) {
+  const { data: files } = await axios.post(API_URL + `${"deleteFile/"}` + `${id}`,payload);
   return files;
 }
 
@@ -72,7 +72,7 @@ export default {
   updateUserInfo,
   showFiles,
   postUnloadFile,
-  getDownloadFile,
+  deleteFile,
   refreshToken,
   postUserAvatar,
 };
