@@ -9,7 +9,6 @@ import actions from "../../store/action/action";
 import Panel from "../panel";
 import { HeaderProfile } from "../header/index";
 
-
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
@@ -54,11 +53,15 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = (props) => {
   const classes = useStyles();
-  const { firstName, lastName, age, aboutYourself, gender, avatar } = useSelector(
-    (state) => state.user
-  );
-  
-  
+  const {
+    firstName,
+    lastName,
+    age,
+    aboutYourself,
+    gender,
+    avatar,
+  } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
@@ -66,18 +69,16 @@ const Profile = (props) => {
     }
     showUserInfo(userAccessToken.userId);
   }, []);
- 
+
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
-    try { 
+    try {
       const tokens = await APIHelper.refreshToken(refreshToken);
       return localStorage.setItem("tokenData", JSON.stringify(tokens));
-
-    }catch (err) {
+    } catch (err) {
       props.history.push("/signIn");
       localStorage.clear("tokenData");
-
     }
   };
 
@@ -85,7 +86,7 @@ const Profile = (props) => {
     const user = await APIHelper.showUserInfo(userId);
     dispatch(actions.userPost(user));
   };
- 
+
   const EditInfo = () => {
     props.history.push("/updateUserInfo");
   };
@@ -104,7 +105,7 @@ const Profile = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src={avatar ?  avatar.url : null} 
+                    src={avatar ? avatar.url : null}
                     className={classes.large}
                   />
                   <input

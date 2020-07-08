@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UpdateUserInfo = (props) => {
   const [file, setFile] = useState(null);
-  const [check, setCheck] = useState(false)
+  const [check, setCheck] = useState(false);
   const {
     firstName,
     lastName,
@@ -84,32 +84,26 @@ const UpdateUserInfo = (props) => {
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
-    try { 
+    try {
       const tokens = await APIHelper.refreshToken(refreshToken);
       return localStorage.setItem("tokenData", JSON.stringify(tokens));
-
-    }catch (err) {
+    } catch (err) {
       props.history.push("/signIn");
       localStorage.clear("tokenData");
-
     }
   };
-
 
   const showUserInfo = async (userId) => {
     const user = await APIHelper.showUserInfo(userId);
     dispatch(actions.userPost(user));
   };
 
-
-
   const postUserAvatar = async (id, payload) => {
     const avatar = await APIHelper.postUserAvatar(id, payload);
-     if(avatar) {
+    if (avatar) {
       setCheck(false);
-      dispatch(actions.saveAvatar(avatar))
-     }
-
+      dispatch(actions.saveAvatar(avatar));
+    }
   };
   const updateUserInfo = async (id, payload) => {
     await APIHelper.updateUserInfo(id, payload);
@@ -118,18 +112,16 @@ const UpdateUserInfo = (props) => {
   const EditInfo = async (e) => {
     e.preventDefault();
     updateUserInfo(id, user);
-   
-      if (props.history.location.pathname === "/updateUserInfo") {
-        props.history.push("/profile");
-      }
+    if (props.history.location.pathname === "/updateUserInfo") {
+      props.history.push("/profile");
+    }
   };
 
   if (file) {
-    setCheck(true)
+    setCheck(true);
     const data = new FormData();
     data.append("file", file);
     postUserAvatar(id, data);
-
     setFile(null);
   }
 
@@ -175,7 +167,7 @@ const UpdateUserInfo = (props) => {
                       className={classes.input}
                       id="icon-button-edit"
                       type="button"
-                      disabled = {check}
+                      disabled={check}
                       onClick={EditInfo}
                     />
                     <label htmlFor="icon-button-edit">
@@ -183,7 +175,7 @@ const UpdateUserInfo = (props) => {
                         color="primary"
                         aria-label="upload picture"
                         component="span"
-                        disabled = {check}
+                        disabled={check}
                       >
                         <Save />
                       </IconButton>

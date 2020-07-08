@@ -11,9 +11,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import APIHelper from "../../APIHelper";
-import { useDispatch} from 'react-redux';
-import jwtDecode from 'jwt-decode'
-import actions from '../../store/action/action'
+import { useDispatch } from "react-redux";
+import jwtDecode from "jwt-decode";
+import actions from "../../store/action/action";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", 
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {

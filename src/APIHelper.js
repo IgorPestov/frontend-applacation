@@ -20,14 +20,16 @@ async function signInUser(email, password, id) {
   return user;
 }
 async function postUserAvatar(id, payload, option) {
-  const {data : avatar} = await axios.post(API_URL + `${"postUserAvatar/"}${id}`, payload, option);
-  return avatar
+  const { data: avatar } = await axios.post(
+    API_URL + `${"postUserAvatar/"}${id}`,
+    payload,
+    option
+  );
+  return avatar;
 }
 
 async function showUserInfo(id) {
-  const { data: user } = await axios.get(
-    API_URL + `${"showUserInfo/"}${id}`
-  );
+  const { data: user } = await axios.get(API_URL + `${"showUserInfo/"}${id}`);
   return user;
 }
 async function updateUserInfo(id, payload) {
@@ -38,9 +40,7 @@ async function updateUserInfo(id, payload) {
   return newUser;
 }
 async function showFiles(id) {
-  const { data: files } = await axios.get(
-    API_URL + `${"showFiles/"}${id}`
-  );
+  const { data: files } = await axios.get(API_URL + `${"showFiles/"}${id}`);
   return files;
 }
 async function postUnloadFile(id, payload) {
@@ -50,12 +50,13 @@ async function postUnloadFile(id, payload) {
   );
   return files;
 }
-async function deleteFile(id,payload) {
-  const { data: files } = await axios.post(API_URL + `${"deleteFile/"}${id}`,payload);
+async function deleteFile(id, payload) {
+  const { data: files } = await axios.post(
+    API_URL + `${"deleteFile/"}${id}`,
+    payload
+  );
   return files;
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////
 async function refreshToken(refreshToken) {
   const URL = "http://localhost:3000/user/refresh-tokens";
 
@@ -63,7 +64,6 @@ async function refreshToken(refreshToken) {
 
   return token;
 }
-/////////////////////////////////////////////////////////////////////////////////////////
 
 export default {
   signUpUser,
