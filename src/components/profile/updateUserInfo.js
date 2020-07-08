@@ -84,9 +84,17 @@ const UpdateUserInfo = (props) => {
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
-    const tokens = await APIHelper.refreshToken(refreshToken);
-    return localStorage.setItem("tokenData", JSON.stringify(tokens));
+    try { 
+      const tokens = await APIHelper.refreshToken(refreshToken);
+      return localStorage.setItem("tokenData", JSON.stringify(tokens));
+
+    }catch (err) {
+      props.history.push("/signIn");
+      localStorage.clear("tokenData");
+
+    }
   };
+
 
   const showUserInfo = async (userId) => {
     const user = await APIHelper.showUserInfo(userId);
@@ -167,6 +175,7 @@ const UpdateUserInfo = (props) => {
                       className={classes.input}
                       id="icon-button-edit"
                       type="button"
+                      disabled = {check}
                       onClick={EditInfo}
                     />
                     <label htmlFor="icon-button-edit">

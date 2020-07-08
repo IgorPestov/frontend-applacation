@@ -49,7 +49,7 @@ const SignInSignUp = (props) => {
   const [errPassword, setErrPassword] = useState(null);
   const [errFirstName, setErrFirstName] = useState(null);
   const checkInputText = email.trim() && password.trim() && firstName.trim();
-  const regEmail = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/;
+  const regEmail = /^[\w-\\.]+@[\w-]+\.[a-z]{2,4}$/;
   const regPassword = /^\S*$/;
   const regFirstName = /^\S*$/;
   const changePassword = (event) => {

@@ -6,12 +6,10 @@ import {
   Paper,
   Avatar,
   Typography,
-  ButtonBase,
   Button,
 } from "@material-ui/core";
 import {
   CreateNewFolder,
-  Archive,
   CloudUpload,
   Delete,
   Save,
@@ -93,8 +91,13 @@ const Files = (props) => {
   const { avatar, id, files } = useSelector((state) => state.user);
   const { user } = useSelector((state) => state);
   const refreshToken = async (refreshToken) => {
-    const tokens = await APIHelper.refreshToken(refreshToken);
-    return localStorage.setItem("tokenData", JSON.stringify(tokens));
+    try {
+      const tokens = await APIHelper.refreshToken(refreshToken);
+      return localStorage.setItem("tokenData", JSON.stringify(tokens));
+    } catch (err) {
+      props.history.push("/signIn");
+      localStorage.clear("tokenData");
+    }
   };
 
   useEffect(() => {
@@ -111,11 +114,9 @@ const Files = (props) => {
   };
   const deleteFile = async (id, paylod) => {
     const filesUser = await APIHelper.deleteFile(id, paylod);
-    console.log(filesUser)
-     if(filesUser) {
-       dispatch(actions.userPost(filesUser))
-     }
-     
+    if (filesUser) {
+      dispatch(actions.userPost(filesUser));
+    }
   };
   const delFile = (e) => {
     e.preventDefault();
@@ -150,22 +151,30 @@ const Files = (props) => {
           files.map((file) => {
             const { name, size, mimetype, _id, urlImg, url, filePath } = file;
 
-            const Img1 = mimetype === "image/png" ? urlImg : null;
+            const i = Math.floor(Math.log(size) / Math.log(1024)),
+              sizes = ["bytes", "kB", "MB", "GB"];
+
+            const Size =
+              (size / Math.pow(1024, i)).toFixed(2) * 1 + " " + sizes[i];
+
             return (
               <Paper key={_id} className={classes.paperFiles}>
                 <Grid container spacing={2}>
                   <Grid item>
-                    {/* <ButtonBase className={classes.image}> */}
-                    <Avatar src={Img1}></Avatar>
-                    {/* <img className={classes.img} alt="complex"  /> */}
-                    {/* </ButtonBase> */}
+                    {mimetype === "image/png" ? (
+                      <Avatar src={urlImg}></Avatar>
+                    ) : (
+                      <Avatar>
+                        <Description />
+                      </Avatar>
+                    )}
                   </Grid>
                   <Grid item xs>
                     <Typography gutterBottom variant="subtitle1">
                       Name: {name}
                     </Typography>
                     <Typography variant="body2" gutterBottom>
-                      Size: {size / Math.pow(1024, 2)}
+                      Size: {Size}
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       Type: {mimetype}
@@ -189,7 +198,7 @@ const Files = (props) => {
                         id={_id}
                         size="small"
                         variant="contained"
-                        value = {filePath}
+                        value={filePath}
                         className={classes.button}
                         startIcon={<Delete />}
                         onClick={delFile}
