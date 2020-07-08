@@ -11,9 +11,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import APIHelper from "../../APIHelper";
-import { useDispatch} from 'react-redux';
-import jwtDecode from 'jwt-decode'
-import actions from '../../store/action/action'
+import { useDispatch } from "react-redux";
+import jwtDecode from "jwt-decode";
+import actions from "../../store/action/action";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", 
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -49,7 +49,7 @@ const SignInSignUp = (props) => {
   const [errPassword, setErrPassword] = useState(null);
   const [errFirstName, setErrFirstName] = useState(null);
   const checkInputText = email.trim() && password.trim() && firstName.trim();
-  const regEmail = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/;
+  const regEmail = /^[\w-\\.]+@[\w-]+\.[a-z]{2,4}$/;
   const regPassword = /^\S*$/;
   const regFirstName = /^\S*$/;
   const changePassword = (event) => {

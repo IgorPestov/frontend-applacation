@@ -34,6 +34,18 @@ const editAboitYourself = (aboutYorself) => {
     payload: aboutYorself,
   };
 };
+const saveAvatar = (avatar) => {
+  return {
+    type: "SAVE_AVATAR",
+    payload: avatar,
+  };
+};
+const addFileInfo = (file) => {
+  return {
+    type: "ADD_FILE_INFO",
+    payload: file,
+  };
+};
 export default {
   userPost,
   editFirstName,
@@ -41,4 +53,6 @@ export default {
   editAge,
   editGender,
   editAboitYourself,
+  saveAvatar,
+  addFileInfo,
 };

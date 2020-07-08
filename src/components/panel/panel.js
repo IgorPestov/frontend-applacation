@@ -31,8 +31,12 @@ const Panel = (props) => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const File = () => {};
-  const Profile = () => {};
+  const File = () => {
+    props.history.push("/uploadFile");
+  };
+  const Profile = () => {
+    props.history.push("/profile");
+  };
 
   const container =
     window !== undefined ? () => window().document.body : undefined;

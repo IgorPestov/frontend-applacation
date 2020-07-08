@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
-import { Edit, AddToPhotos } from "@material-ui/icons";
+import { Edit } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
 import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
 import Panel from "../panel";
-import Header from "../header/header";
+import { HeaderProfile } from "../header/index";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -25,9 +25,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     marginTop: 3,
     maxWidht: 500,
-    minHeight: 200,
+    minHeight: 100,
   },
- 
+
   root: {
     display: "flex",
   },
@@ -53,22 +53,33 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = (props) => {
   const classes = useStyles();
-  const { firstName, lastName, age, aboutYourself, gender } = useSelector(
-    (state) => state.user
-  );
-  const dispatch = useDispatch();
+  const {
+    firstName,
+    lastName,
+    age,
+    aboutYourself,
+    gender,
+    avatar,
+  } = useSelector((state) => state.user);
 
+  const dispatch = useDispatch();
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
     }
     showUserInfo(userAccessToken.userId);
   }, []);
+
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
-    const tokens = await APIHelper.refreshToken(refreshToken);
-    return localStorage.setItem("tokenData", JSON.stringify(tokens));
+    try {
+      const tokens = await APIHelper.refreshToken(refreshToken);
+      return localStorage.setItem("tokenData", JSON.stringify(tokens));
+    } catch (err) {
+      props.history.push("/signIn");
+      localStorage.clear("tokenData");
+    }
   };
 
   const showUserInfo = async (userId) => {
@@ -81,8 +92,8 @@ const Profile = (props) => {
   };
   return (
     <div className={classes.root}>
-      <Header history={props.history} />
-      <Panel />
+      <HeaderProfile history={props.history} />
+      <Panel history={props.history} />
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Container className={classes.root}>
@@ -94,24 +105,9 @@ const Profile = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    src={avatar ? avatar.url : null}
                     className={classes.large}
                   />
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="icon-button-foto"
-                    type="button"
-                  />
-                  <label className={classes.edit} htmlFor="icon-button-foto">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <AddToPhotos />
-                    </IconButton>
-                  </label>
                   <input
                     accept="image/*"
                     className={classes.input}

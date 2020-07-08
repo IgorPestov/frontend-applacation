@@ -1,30 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  AppBar,
-  CssBaseline,
-  Divider,
-  Drawer,
-  Hidden,
   IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   Container,
   Grid,
   Paper,
-  Toolbar,
-  Typography,
   Avatar,
-  Button,
   TextField,
 } from "@material-ui/core";
-import { Edit, Menu, Person, AddToPhotos, Folder } from "@material-ui/icons";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { AddAPhoto, Save } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import APIHelper from "../../APIHelper";
 import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
+import { HeaderProfile } from "../header";
+import Panel from "../panel";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -44,30 +34,11 @@ const useStyles = makeStyles((theme) => ({
     maxWidht: 500,
     minHeight: 200,
   },
-  title: {
-    flexGrow: 1,
-  },
+
   root: {
     display: "flex",
   },
-  drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  appBar: {
-    [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
-    },
-  },
+
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
@@ -82,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     display: "none",
+    variant: "contained",
   },
   edit: {
     flexGrow: 1,
@@ -89,6 +61,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UpdateUserInfo = (props) => {
+  const [file, setFile] = useState(null);
+  const [check, setCheck] = useState(false);
+  const {
+    firstName,
+    lastName,
+    age,
+    gender,
+    id,
+    aboutYourself,
+    avatar,
+  } = useSelector((state) => state.user);
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
@@ -98,8 +84,13 @@ const UpdateUserInfo = (props) => {
   const token = JSON.parse(localStorage.getItem("tokenData")).accessToken;
   const userAccessToken = jwtDecode(token);
   const refreshToken = async (refreshToken) => {
-    const tokens = await APIHelper.refreshToken(refreshToken);
-    return localStorage.setItem("tokenData", JSON.stringify(tokens));
+    try {
+      const tokens = await APIHelper.refreshToken(refreshToken);
+      return localStorage.setItem("tokenData", JSON.stringify(tokens));
+    } catch (err) {
+      props.history.push("/signIn");
+      localStorage.clear("tokenData");
+    }
   };
 
   const showUserInfo = async (userId) => {
@@ -107,109 +98,37 @@ const UpdateUserInfo = (props) => {
     dispatch(actions.userPost(user));
   };
 
-  const { firstName, lastName, age, gender, id, aboutYourself } = useSelector(
-    (state) => state.user
-  );
-  const { window } = props;
-  const classes = useStyles();
-  const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const logOut = () => {
-    localStorage.setItem("logged", false);
-    if (!localStorage.setItem("logged", false)) {
-      props.history.push("/signIn");
-      localStorage.clear("tokenData");
+  const postUserAvatar = async (id, payload) => {
+    const avatar = await APIHelper.postUserAvatar(id, payload);
+    if (avatar) {
+      setCheck(false);
+      dispatch(actions.saveAvatar(avatar));
     }
   };
   const updateUserInfo = async (id, payload) => {
     await APIHelper.updateUserInfo(id, payload);
   };
-  const EditInfo = () => {
+
+  const EditInfo = async (e) => {
+    e.preventDefault();
     updateUserInfo(id, user);
     if (props.history.location.pathname === "/updateUserInfo") {
-      dispatch(actions.editFirstName(firstName));
       props.history.push("/profile");
     }
   };
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List>
-        {["Profile", "File"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <Folder /> : <Person />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-    </div>
-  );
 
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
+  if (file) {
+    setCheck(true);
+    const data = new FormData();
+    data.append("file", file);
+    postUserAvatar(id, data);
+    setFile(null);
+  }
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <Menu />
-          </IconButton>
-          <Typography variant="h6" className={classes.title} noWrap>
-            Profile
-          </Typography>
-          <Button color="inherit" onClick={logOut}>
-            logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === "rtl" ? "right" : "left"}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+      <HeaderProfile history={props.history} />
+      <Panel history={props.history} />
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Container className={classes.root}>
@@ -221,40 +140,47 @@ const UpdateUserInfo = (props) => {
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
+                    src={avatar ? avatar.url : null}
                     className={classes.large}
                   />
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="icon-button-foto"
-                    type="button"
-                  />
-                  <label className={classes.edit} htmlFor="icon-button-foto">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <AddToPhotos />
-                    </IconButton>
-                  </label>
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="icon-button-edit"
-                    type="button"
-                    onClick={EditInfo}
-                  />
-                  <label htmlFor="icon-button-edit">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <Edit />
-                    </IconButton>
-                  </label>
+                  <form id="editUser">
+                    <input
+                      accept="image/*"
+                      className={classes.input}
+                      id="icon-button-foto"
+                      type="file"
+                      onChange={({ target }) => {
+                        setFile(target.files[0]);
+                      }}
+                    />
+                    <label className={classes.edit} htmlFor="icon-button-foto">
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <AddAPhoto />
+                      </IconButton>
+                    </label>
+
+                    <input
+                      className={classes.input}
+                      id="icon-button-edit"
+                      type="button"
+                      disabled={check}
+                      onClick={EditInfo}
+                    />
+                    <label htmlFor="icon-button-edit">
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                        disabled={check}
+                      >
+                        <Save />
+                      </IconButton>
+                    </label>
+                  </form>
                 </Paper>
               </Grid>
               <Grid
@@ -317,6 +243,7 @@ const UpdateUserInfo = (props) => {
                   id="outlined-multiline-static"
                   multiline
                   fullWidth
+                  placeholder="text here"
                   variant="outlined"
                   value={aboutYourself}
                   onChange={({ target }) =>
