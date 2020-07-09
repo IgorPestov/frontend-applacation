@@ -35,37 +35,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = (props) => {
-  const [email, setEmail] = useState("");
+const CreateNewPassword = (props) => {
+  const [passwordRepeat, setPasswordRepeat] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState(null);
   const [errEmpty, seterrEmpty] = useState(null);
   const dispatch = useDispatch();
   const handleSubmit = () => {
-    if (!email.trim() && !password.trim()) {
+    if (!passwordRepeat.trim() && !password.trim()) {
       return seterrEmpty("Empty fields");
     }
+    if(passwordRepeat === password)
     seterrEmpty(null);
-    signInUser(email, password);
+    signInUser(password);
   };
 
   const signInUser = async (email, password) => {
-    try {
-      const tokens = await APIHelper.signInUser(email, password);
-      const userAccessToken = jwtDecode(tokens.accessToken);
-      showUserInfo(userAccessToken.userId);
-      if (tokens) {
-        localStorage.setItem("logged", true);
-        localStorage.setItem("tokenData", JSON.stringify(tokens));
-      }
-    } catch (err) {
-      return setErr(err.response);
-    }
+    props.history.push("/profile");
   };
   const showUserInfo = async (userId) => {
     const user = await APIHelper.showUserInfo(userId);
     dispatch(actions.userPost(user));
-    props.history.push("/profile");
+    
   };
   const classes = useStyles();
 
@@ -78,26 +69,26 @@ const SignIn = (props) => {
         <form className={classes.form} noValidate>
           <TextField
             error={!!err || !!errEmpty}
-            onChange={({ target }) => setEmail(target.value)}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            error={!!err || !!errEmpty}
             onChange={({ target }) => setPassword(target.value)}
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="password"
+            id="password"
             label="Password"
+            name="password"
+            autoComplete="password"
+            autoFocus
+          />
+          <TextField
+            error={!!err || !!errEmpty}
+            onChange={({ target }) => setPasswordRepeat(target.value)}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Repeat password"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -109,20 +100,8 @@ const SignIn = (props) => {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Sign in
+            Save password
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="/resetPassword" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/signUp" variant="body2">
-                Don't have an account? Sign Up
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
       <Box mt={8}></Box>
@@ -130,4 +109,5 @@ const SignIn = (props) => {
   );
 };
 
-export default SignIn;
+export default CreateNewPassword;
+

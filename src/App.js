@@ -6,6 +6,9 @@ import SignUp from "./components/signUp";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import Files from "./components/files";
+import CreateNewPassword from "./components/createNewPassword/index";
+import ResetPassword from "./components/resetPassword/index";
+
 
 class App extends Component {
   render() {
@@ -19,6 +22,9 @@ class App extends Component {
             <Route history={history} path="/signUp" component={SignUp} />
             <Route history={history} path="/profile" component={Profile} />
             <Route history={history} path="/uploadFile" component={Files} />
+            <Route history={history} path="/createNewPasswors" component={CreateNewPassword} />
+            <Route history={history} path="/resetPassword" component={ResetPassword} />
+
             <Route
               history={history}
               path="/updateUserInfo"

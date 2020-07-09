@@ -35,38 +35,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = (props) => {
+const ResetPassword = (props) => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [err, setErr] = useState(null);
   const [errEmpty, seterrEmpty] = useState(null);
   const dispatch = useDispatch();
   const handleSubmit = () => {
-    if (!email.trim() && !password.trim()) {
+    if (!email.trim()) {
       return seterrEmpty("Empty fields");
     }
     seterrEmpty(null);
-    signInUser(email, password);
+    signInUser(email);
   };
 
   const signInUser = async (email, password) => {
-    try {
-      const tokens = await APIHelper.signInUser(email, password);
-      const userAccessToken = jwtDecode(tokens.accessToken);
-      showUserInfo(userAccessToken.userId);
-      if (tokens) {
-        localStorage.setItem("logged", true);
-        localStorage.setItem("tokenData", JSON.stringify(tokens));
-      }
-    } catch (err) {
-      return setErr(err.response);
-    }
+     
   };
-  const showUserInfo = async (userId) => {
-    const user = await APIHelper.showUserInfo(userId);
-    dispatch(actions.userPost(user));
-    props.history.push("/profile");
-  };
+
   const classes = useStyles();
 
   return (
@@ -89,19 +74,6 @@ const SignIn = (props) => {
             autoComplete="email"
             autoFocus
           />
-          <TextField
-            error={!!err || !!errEmpty}
-            onChange={({ target }) => setPassword(target.value)}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
           <Button
             fullWidth
             variant="contained"
@@ -109,20 +81,8 @@ const SignIn = (props) => {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Sign in
+            Send mail
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="/resetPassword" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="/signUp" variant="body2">
-                Don't have an account? Sign Up
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
       <Box mt={8}></Box>
@@ -130,4 +90,4 @@ const SignIn = (props) => {
   );
 };
 
-export default SignIn;
+export default ResetPassword;
