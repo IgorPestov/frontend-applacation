@@ -74,7 +74,6 @@ const SignIn = (props) => {
       <CssBaseline />
       <div className={classes.paper}>
         {err && <span className={classes.err}>{err.data.message}</span>}
-        {errEmpty && <span className={classes.err}>{errEmpty}</span>}
         <form className={classes.form} noValidate>
           <TextField
             error={!!err || !!errEmpty}

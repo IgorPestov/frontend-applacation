@@ -22,7 +22,7 @@ class App extends Component {
             <Route history={history} path="/signUp" component={SignUp} />
             <Route history={history} path="/profile" component={Profile} />
             <Route history={history} path="/uploadFile" component={Files} />
-            <Route history={history} path="/createNewPasswors" component={CreateNewPassword} />
+            <Route history={history} path="/createNewPassword" component={CreateNewPassword} />
             <Route history={history} path="/resetPassword" component={ResetPassword} />
 
             <Route

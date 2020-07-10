@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
+import {
+  IconButton,
+  Container,
+  Grid,
+  Paper,
+  Avatar,
+  Typography,
+} from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,15 +18,28 @@ import { HeaderProfile } from "../header/index";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
-  grid: { margin: theme.spacing(2) },
+  grid: theme.spacing(3),
   paper: {
-    padding: theme.spacing(1),
-    marginTop: 1,
+    padding: 2,
+    margin: 1,
     maxWidht: 500,
+    elevation: 0,
+    minHeight: "100%",
+  },
+  paperStaticInfo: {
+    padding: 2,
+    margin: 1,
+    elevation: 0,
+    minHeight: "100%",
+    textAlign: "right",
+    letterSpacing: 5,
+    m: 1,
   },
   paper1: {
-    padding: theme.spacing(1),
-    marginBottom: 3,
+    padding: theme.spacing(3),
+    paddingBottom: 0,
+    marginRight: 3,
+    minHeight: 220,
   },
   paper2: {
     padding: theme.spacing(1),
@@ -37,16 +57,23 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
   },
   large: {
     width: theme.spacing(15),
     height: theme.spacing(15),
+    margin: "auto",
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: "100%",
   },
   input: {
     display: "none",
   },
   edit: {
+    flexGrow: 1,
+  },
+  gridInfo: {
     flexGrow: 1,
   },
 }));
@@ -98,10 +125,9 @@ const Profile = (props) => {
         <div className={classes.toolbar} />
         <Container className={classes.root}>
           <Grid container className={classes.grid}>
-            <Grid container>
-              <Grid item xs={12}>
+            <Grid container item xs={12}>
+              <Grid item xs={3} className={classes.grid}>
                 <Paper className={classes.paper1}>
-                  Avatar
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
@@ -126,33 +152,53 @@ const Profile = (props) => {
                   </label>
                 </Paper>
               </Grid>
-              <Grid
-                container
-                alignItems="stretch"
-                direction="column"
-                item
-                xs={12}
-              >
-                <Grid>
-                  <Paper className={classes.paper}>
-                    First name: {firstName}
-                  </Paper>
+              <Grid container item xs={9}>
+                <Grid container xs={12}>
+                  <Grid item xs={4}>
+                    <Paper  className={classes.paperStaticInfo}>
+                      First name:
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Paper className={classes.paper}>{firstName}</Paper>
+                  </Grid>
                 </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>Last name: {lastName}</Paper>
+                <Grid container>
+                  <Grid item xs={4}>
+                    <Paper  className={classes.paperStaticInfo}>
+                      Last name:
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Paper className={classes.paper}>{lastName}</Paper>
+                  </Grid>
                 </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>Age: {age} </Paper>
+                <Grid container>
+                  <Grid item xs={4}>
+                    <Paper  className={classes.paperStaticInfo}>
+                      Age:
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Paper className={classes.paper}>{age}</Paper>
+                  </Grid>
                 </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>Gender: {gender}</Paper>
+                <Grid container>
+                  <Grid item xs={4}>
+                    <Paper className={classes.paperStaticInfo}>Gender:</Paper>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Paper className={classes.paper}>{gender}</Paper>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Paper className={classes.paper2}>
-                About yourself: {aboutYourself}
-              </Paper>
+              <Typography>
+                <Paper className={classes.paper2}>
+                  About yourself: {aboutYourself}
+                </Paper>
+              </Typography>
             </Grid>
           </Grid>
         </Container>

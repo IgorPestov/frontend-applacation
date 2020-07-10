@@ -2,15 +2,11 @@ import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
-import { useDispatch } from "react-redux";
-import jwtDecode from "jwt-decode";
-import actions from "../../store/action/action";
+import { Alert, AlertTitle } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,52 +33,105 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateNewPassword = (props) => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [err, setErr] = useState(null);
-  const [errEmpty, seterrEmpty] = useState(null);
-  const dispatch = useDispatch();
-  const handleSubmit = () => {
-    if (!passwordRepeat.trim() && !password.trim()) {
-      return seterrEmpty("Empty fields");
+  const [errToken, setErrToken] = useState(null)
+  const [done, setDone] = useState(null);
+  const regPassword = /^\S*$/;
+  const [errPassword, setErrPassword] = useState(null);
+  const checkPassword = passwordRepeat.trim() && newPassword.trim();
+  const resetLink = window.location.href.slice(40);
+  const changeNewPassword = (event) => {
+    if (
+      !regPassword.test(event.target.value) ||
+      event.target.value.length < 8
+    ) {
+      return setErrPassword(
+        'Password must be 8 characters long and must be have no spaces!"'
+      );
     }
-    if(passwordRepeat === password)
-    seterrEmpty(null);
-    signInUser(password);
+    setErrPassword(null);
+    return setNewPassword(event.target.value);
+  };
+  const changeRepeatPassword = (event) => {
+    if (
+      !regPassword.test(event.target.value) ||
+      event.target.value.length < 8
+    ) {
+      return setErrPassword(
+        'Password must be 8 characters long and must be have no spaces!"'
+      );
+    }
+    setErrPassword(null);
+    return setPasswordRepeat(event.target.value);
+  };
+  const handleSubmit = () => {
+    if (newPassword === passwordRepeat || !checkPassword) {
+      createNewPassword(resetLink, newPassword);
+    } else {
+      setErr("Passwords mismatch");
+    }
+    setErrToken(null)
+
   };
 
-  const signInUser = async (email, password) => {
-    props.history.push("/profile");
+  const createNewPassword = async (resetLink, newPassword) => {
+    try {
+      const user = await APIHelper.createNewPassword(resetLink, newPassword);
+      setDone(user.message);
+      props.history.push("/signIn");
+
+    } catch (err) {
+      setErrToken( err.response.data.err)
+    }
+
   };
-  const showUserInfo = async (userId) => {
-    const user = await APIHelper.showUserInfo(userId);
-    dispatch(actions.userPost(user));
-    
+  const Alerts = () => {
+    if (done) {
+      return (
+        <Alert severity="success">
+          <AlertTitle>Success</AlertTitle>
+          {done}
+        </Alert>
+      );
+    }
+    if (err || errPassword || errToken) {
+      return (
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {err || errPassword || errToken}
+        </Alert>
+      );
+    }
+
+    return null;
   };
+
   const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        {err && <span className={classes.err}>{err.data.message}</span>}
-        {errEmpty && <span className={classes.err}>{errEmpty}</span>}
         <form className={classes.form} noValidate>
+          <Alerts />
           <TextField
-            error={!!err || !!errEmpty}
-            onChange={({ target }) => setPassword(target.value)}
+            error={!!errPassword }
+            onChange={changeNewPassword}
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="password"
-            label="Password"
-            name="password"
-            autoComplete="password"
+            id="newPassword"
+            label="New Password"
+            type="password"
+            name="newPassword"
+            autoComplete="newPassword"
             autoFocus
           />
           <TextField
-            error={!!err || !!errEmpty}
-            onChange={({ target }) => setPasswordRepeat(target.value)}
+            error={!!errPassword}
+            onChange={changeRepeatPassword}
             variant="outlined"
             margin="normal"
             required
@@ -110,4 +159,3 @@ const CreateNewPassword = (props) => {
 };
 
 export default CreateNewPassword;
-

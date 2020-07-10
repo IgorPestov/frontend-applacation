@@ -46,6 +46,12 @@ const addFileInfo = (file) => {
     payload: file,
   };
 };
+const resetLink = (link) => {
+  return {
+    type: "RESET_LINK",
+    payload: link,
+  };
+};
 export default {
   userPost,
   editFirstName,
@@ -55,4 +61,5 @@ export default {
   editAboitYourself,
   saveAvatar,
   addFileInfo,
+  resetLink,
 };

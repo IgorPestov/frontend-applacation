@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
 import { useDispatch } from "react-redux";
-import jwtDecode from "jwt-decode";
-import actions from "../../store/action/action";
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,31 +36,58 @@ const useStyles = makeStyles((theme) => ({
 const ResetPassword = (props) => {
   const [email, setEmail] = useState("");
   const [err, setErr] = useState(null);
-  const [errEmpty, seterrEmpty] = useState(null);
-  const dispatch = useDispatch();
+  const [done, setDone] = useState(null);
+  const [errEmpty, seterrEmpty] = useState(null);;
   const handleSubmit = () => {
     if (!email.trim()) {
       return seterrEmpty("Empty fields");
     }
     seterrEmpty(null);
-    signInUser(email);
+    setDone(null)
+    setErr(null)
+    resetPassword(email);
   };
 
-  const signInUser = async (email, password) => {
-     
+  const resetPassword = async (email) => {
+    try {
+      const user = await APIHelper.resetPassword(email);
+      setDone(user.message);
+    } catch (err) {
+      setErr(err.response.data.error);
+    }
   };
-
+  const Alerts = () => {
+    if (done) {
+      return   (
+        <Alert severity="success">
+          <AlertTitle>Success</AlertTitle>
+          {done}
+        </Alert>
+      );
+    }
+    if (err) {
+      return   (
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {err} — <strong>try again!</strong>
+        </Alert>
+      );
+    }
+    
+    return null;
+  };
+  
   const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        {err && <span className={classes.err}>{err.data.message}</span>}
-        {errEmpty && <span className={classes.err}>{errEmpty}</span>}
+      {errEmpty && <span className={classes.err}>{errEmpty}</span>}
         <form className={classes.form} noValidate>
+          <Alerts />
           <TextField
-            error={!!err || !!errEmpty}
+            error={!!errEmpty}
             onChange={({ target }) => setEmail(target.value)}
             variant="outlined"
             margin="normal"
