@@ -16,19 +16,24 @@ import actions from "../../store/action/action";
 import Panel from "../panel";
 import { HeaderProfile } from "../header/index";
 
-const drawerWidth = 240;
+const drawerWidth = 150;
 const useStyles = makeStyles((theme) => ({
-  grid: theme.spacing(3),
+  grid: {
+    pading: theme.spacing(1),
+  },
+  PaperInfo: {
+    marginTop: 3,
+    minWidth: "100%",
+  },
   paper: {
-    padding: 2,
-    margin: 1,
-    maxWidht: 500,
     elevation: 0,
     minHeight: "100%",
+    fontWeight: 600,
+    fontStyle: "italic",
+    fontFamily: "Monospace",
+    fontSize: 16,
   },
   paperStaticInfo: {
-    padding: 2,
-    margin: 1,
     elevation: 0,
     minHeight: "100%",
     textAlign: "right",
@@ -36,15 +41,15 @@ const useStyles = makeStyles((theme) => ({
     m: 1,
   },
   paper1: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
+    minWidth : 150,
+    minHeight: 200,
     paddingBottom: 0,
     marginRight: 3,
-    minHeight: 220,
   },
   paper2: {
     padding: theme.spacing(1),
     marginTop: 3,
-    maxWidht: 500,
     minHeight: 100,
   },
 
@@ -57,9 +62,10 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
   large: {
+    borderRadius: "5%",
     width: theme.spacing(15),
     height: theme.spacing(15),
     margin: "auto",
@@ -125,8 +131,8 @@ const Profile = (props) => {
         <div className={classes.toolbar} />
         <Container className={classes.root}>
           <Grid container className={classes.grid}>
-            <Grid container item xs={12}>
-              <Grid item xs={3} className={classes.grid}>
+            <Grid item container xs={12} spacing={3}>
+              <Grid item xs={12} sm={4} lg ={2}>
                 <Paper className={classes.paper1}>
                   <Avatar
                     variant="square"
@@ -152,45 +158,61 @@ const Profile = (props) => {
                   </label>
                 </Paper>
               </Grid>
-              <Grid container item xs={9}>
-                <Grid container xs={12}>
-                  <Grid item xs={4}>
-                    <Paper  className={classes.paperStaticInfo}>
-                      First name:
-                    </Paper>
+              <Grid item container alignItems="center" xs={12} sm={8} lg ={10} className={classes.gridInfoUser}>
+                <Paper className={classes.PaperInfo}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography className={classes.paperStaticInfo}>
+                        First name:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography className={classes.paper}>
+                        {firstName}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={8}>
-                    <Paper className={classes.paper}>{firstName}</Paper>
+                </Paper>
+                <Paper className={classes.PaperInfo}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography className={classes.paperStaticInfo}>
+                        Last name:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography className={classes.paper}>
+                        {lastName}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item xs={4}>
-                    <Paper  className={classes.paperStaticInfo}>
-                      Last name:
-                    </Paper>
+                </Paper>
+                <Paper className={classes.PaperInfo}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography className={classes.paperStaticInfo}>
+                        Age:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography className={classes.paper}>{age}</Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={8}>
-                    <Paper className={classes.paper}>{lastName}</Paper>
+                </Paper>
+                <Paper className={classes.PaperInfo}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography className={classes.paperStaticInfo}>
+                        Gender:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography className={classes.paper}>
+                        {gender}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item xs={4}>
-                    <Paper  className={classes.paperStaticInfo}>
-                      Age:
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Paper className={classes.paper}>{age}</Paper>
-                  </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item xs={4}>
-                    <Paper className={classes.paperStaticInfo}>Gender:</Paper>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Paper className={classes.paper}>{gender}</Paper>
-                  </Grid>
-                </Grid>
+                </Paper>
               </Grid>
             </Grid>
             <Grid item xs={12}>

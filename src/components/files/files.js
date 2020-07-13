@@ -7,6 +7,7 @@ import {
   Avatar,
   Typography,
   Button,
+  LinearProgress,
 } from "@material-ui/core";
 import {
   CreateNewFolder,
@@ -75,6 +76,14 @@ const useStyles = makeStyles((theme) => ({
     display: "colums",
     margin: theme.spacing(1),
   },
+  buttonSave: {
+    display: "none",
+    margin: theme.spacing(1),
+  },
+  buttonSaveActive: {
+    display: "colums",
+    margin: theme.spacing(1),
+  },
   buttonGrid: {
     direction: "column",
     alignItems: "flex-end",
@@ -86,6 +95,8 @@ const Files = (props) => {
   const userAccessToken = jwtDecode(token);
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
+  const [save, setSave] = useState(false);
+  const [load, setLoad] = useState("Files is empty")
   const classes = useStyles();
 
   const { avatar, id, files } = useSelector((state) => state.user);
@@ -109,6 +120,8 @@ const Files = (props) => {
   const postUnloadFile = async (id, payload) => {
     const filesUser = await APIHelper.postUnloadFile(id, payload);
     if (filesUser) {
+      setLoad("File upload");
+      console.log(load);
       setCheck(false);
     }
   };
@@ -133,18 +146,34 @@ const Files = (props) => {
     dispatch(actions.userPost(user));
   };
   const saveFile = (e) => {
+    setLoad("Files is empty");
     e.preventDefault();
     showUserInfo(id, user);
+    setSave(false);
   };
   if (file) {
     setCheck(true);
+    setSave(true);
     const data = new FormData();
     data.append("file", file);
     postUnloadFile(id, data);
     setFile(null);
   }
-
-  const Files = () => {
+  // const Load = () => {
+  //   return (
+  //     <Container>
+  //         {files.length > 0 ? load : (
+  //       <Paper>
+  //         <Typography gutterBottom variant="subtitle1">
+  //           {load ? load : <LinearProgress />}
+  //         </Typography>
+  //       </Paper>
+  //       ) }
+  //     </Container>
+    
+  //   )
+  }
+  const FilesUser = () => {
     return (
       <Container>
         {files.length > 0 ? (
@@ -214,7 +243,7 @@ const Files = (props) => {
         ) : (
           <Paper>
             <Typography gutterBottom variant="subtitle1">
-              Files is empty
+              {load ? load : <LinearProgress />}
             </Typography>
           </Paper>
         )}
@@ -258,7 +287,9 @@ const Files = (props) => {
                     variant="contained"
                     color="primary"
                     size="small"
-                    className={classes.button}
+                    className={
+                      save ? classes.buttonSaveActive : classes.buttonSave
+                    }
                     startIcon={<Save />}
                     disabled={check}
                     onClick={saveFile}
@@ -273,8 +304,8 @@ const Files = (props) => {
                 direction="column"
                 item
                 xs={12}
-              >
-                <Files />
+              > 
+                <FilesUser />
               </Grid>
             </Grid>
           </Grid>

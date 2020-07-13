@@ -7,8 +7,6 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import APIHelper from "../../APIHelper";
-import { useDispatch } from "react-redux";
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
