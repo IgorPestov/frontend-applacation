@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { IconButton, Container, Grid, Paper, Avatar } from "@material-ui/core";
+import {
+  IconButton,
+  Container,
+  Grid,
+  Paper,
+  Avatar,
+  Typography,
+} from "@material-ui/core";
 import { Edit } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,23 +16,50 @@ import actions from "../../store/action/action";
 import Panel from "../panel";
 import { HeaderProfile } from "../header/index";
 
-const drawerWidth = 240;
+const drawerWidth = 150;
+
 const useStyles = makeStyles((theme) => ({
-  grid: { margin: theme.spacing(2) },
+  grid: {
+    pading: theme.spacing(1),
+  },
+  PaperInfoBlock: {
+    backgroundColor: '#d7ccc8',
+    marginTop: 3,
+    width: "100%",
+  },
   paper: {
-    padding: theme.spacing(1),
-    marginTop: 1,
-    maxWidht: 500,
+    elevation: 0,
+    minHeight: "100%",
+    fontWeight: 200,
+    fontStyle: "italic",
+    fontFamily: "Monospace",
+    fontSize: 16,
+    wordBreak: "break-all",
   },
-  paper1: {
-    padding: theme.spacing(1),
-    marginBottom: 3,
+  paperStaticInfo: {
+    minHeight: "100%",
+    textAlign: "right",
+    letterSpacing: 5,
+    display: "block",
   },
-  paper2: {
+  paperStaticInfoYourself: {
+    minHeight: "100%",
+
+    letterSpacing: 5,
+  },
+  PaperInfoBlockAll: {
+    backgroundColor: '#d7ccc8',
+    padding: theme.spacing(1),
+    paddingBottom: 0,
+    marginRight: 3,
+  },
+  PaperInfoBlockYourSelf: {
+    backgroundColor: '#d7ccc8',
     padding: theme.spacing(1),
     marginTop: 3,
-    maxWidht: 500,
+    marginRight: 3,
     minHeight: 100,
+    minWidth: "100%",
   },
 
   root: {
@@ -37,16 +71,24 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
   },
   large: {
+    borderRadius: "5%",
     width: theme.spacing(15),
     height: theme.spacing(15),
+    margin: "auto",
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: "100%",
   },
   input: {
     display: "none",
   },
   edit: {
+    flexGrow: 1,
+  },
+  gridInfo: {
     flexGrow: 1,
   },
 }));
@@ -97,11 +139,10 @@ const Profile = (props) => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Container className={classes.root}>
-          <Grid container className={classes.grid}>
-            <Grid container>
-              <Grid item xs={12}>
-                <Paper className={classes.paper1}>
-                  Avatar
+          <Grid container direction="row" spacing={3} className={classes.grid}>
+            <Grid item container xs={12} spacing={3}>
+              <Grid item xs={12} sm={4} lg={2}>
+                <Paper className={classes.PaperInfoBlockAll}>
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
@@ -127,31 +168,95 @@ const Profile = (props) => {
                 </Paper>
               </Grid>
               <Grid
-                container
-                alignItems="stretch"
-                direction="column"
                 item
+                container
+                alignItems="center"
                 xs={12}
+                sm={8}
+                lg={10}
+                className={classes.gridInfoUser}
               >
-                <Grid>
-                  <Paper className={classes.paper}>
-                    First name: {firstName}
-                  </Paper>
-                </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>Last name: {lastName}</Paper>
-                </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>Age: {age} </Paper>
-                </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>Gender: {gender}</Paper>
-                </Grid>
+                <Paper className={classes.PaperInfoBlock}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
+                        First name:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography component={"span"} className={classes.paper}>
+                        {firstName}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+                <Paper className={classes.PaperInfoBlock}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
+                        Last name:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography component={"span"} className={classes.paper}>
+                        {lastName}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+                <Paper className={classes.PaperInfoBlock}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
+                        Age:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography component={"span"} className={classes.paper}>
+                        {age}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+                <Paper className={classes.PaperInfoBlock}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
+                        Gender:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography component={"span"} className={classes.paper}>
+                        {gender}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
               </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper2}>
-                About yourself: {aboutYourself}
+            <Grid item container xs={12}>
+              <Paper className={classes.PaperInfoBlockYourSelf}>
+                <Typography
+                  component={"span"}
+                  className={classes.paperStaticInfoYourself}
+                >
+                  About yourself:
+                </Typography>
+                <Typography paragraph className={classes.paper}>
+                  {aboutYourself}
+                </Typography>
               </Paper>
             </Grid>
           </Grid>

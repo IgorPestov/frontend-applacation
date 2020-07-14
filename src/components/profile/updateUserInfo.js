@@ -6,6 +6,7 @@ import {
   Paper,
   Avatar,
   TextField,
+  Typography,
 } from "@material-ui/core";
 import { AddAPhoto, Save } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,25 +17,49 @@ import actions from "../../store/action/action";
 import { HeaderProfile } from "../header";
 import Panel from "../panel";
 
-const drawerWidth = 240;
+const drawerWidth = 150;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
+
+  PaperInfoBlock: {
+    backgroundColor: "#d7ccc8",
+    marginTop: 3,
+    minWidth: "100%",
+  },
   paper: {
-    padding: theme.spacing(1),
-    marginTop: 1,
-    maxWidht: 500,
+    elevation: 0,
+    minHeight: "100%",
+    fontWeight: 600,
+    fontStyle: "italic",
+    fontFamily: "Monospace",
+    fontSize: 16,
   },
-  paper1: {
-    padding: theme.spacing(1),
-    marginBottom: 3,
+  paperStaticInfo: {
+    minHeight: "100%",
+    textAlign: "right",
+    letterSpacing: 5,
   },
-  paper2: {
+  PaperInfoBlockAll: {
+    backgroundColor: "#d7ccc8",
+
+    padding: theme.spacing(1),
+    minWidth: 150,
+    minHeight: 200,
+    paddingBottom: 0,
+    marginRight: 3,
+  },
+  paperStaticInfoYourself: {
+    minHeight: "100%",
+
+    letterSpacing: 5,
+  },
+  PaperInfoBlockYourSelf: {
+    backgroundColor: "#d7ccc8",
+
     padding: theme.spacing(1),
     marginTop: 3,
-    maxWidht: 500,
-    minHeight: 200,
+    minHeight: 100,
   },
-
   root: {
     display: "flex",
   },
@@ -45,11 +70,15 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
   },
   large: {
+    borderRadius: "5%",
     width: theme.spacing(15),
     height: theme.spacing(15),
+    margin: "auto",
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: "100%",
   },
   input: {
     display: "none",
@@ -133,9 +162,9 @@ const UpdateUserInfo = (props) => {
         <div className={classes.toolbar} />
         <Container className={classes.root}>
           <Grid container className={classes.grid}>
-            <Grid container>
-              <Grid item xs={12}>
-                <Paper className={classes.paper1}>
+            <Grid item container xs={12} spacing={3}>
+              <Grid item xs={12} sm={4} lg={2}>
+                <Paper className={classes.PaperInfoBlockAll}>
                   Avatar
                   <Avatar
                     variant="square"
@@ -184,72 +213,128 @@ const UpdateUserInfo = (props) => {
                 </Paper>
               </Grid>
               <Grid
-                container
-                alignItems="stretch"
-                direction="column"
                 item
+                container
+                alignItems="center"
                 xs={12}
+                sm={8}
+                lg={10}
+                className={classes.gridInfoUser}
               >
-                <Grid>
-                  <Paper className={classes.paper}>
-                    First name:
-                    <TextField
-                      value={firstName}
-                      onChange={({ target }) =>
-                        dispatch(actions.editFirstName(target.value))
-                      }
-                    />
-                  </Paper>
-                </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>
-                    Last name:
-                    <TextField
-                      value={lastName}
-                      onChange={({ target }) =>
-                        dispatch(actions.editLastName(target.value))
-                      }
-                    />
-                  </Paper>
-                </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>
-                    Age:
-                    <TextField
-                      value={age}
-                      onChange={({ target }) =>
-                        dispatch(actions.editAge(target.value))
-                      }
-                    />
-                  </Paper>
-                </Grid>
-                <Grid>
-                  <Paper className={classes.paper}>
-                    Gender:
-                    <TextField
-                      value={gender}
-                      onChange={({ target }) =>
-                        dispatch(actions.editGender(target.value))
-                      }
-                    />
-                  </Paper>
-                </Grid>
+                <Paper className={classes.PaperInfoBlock}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
+                        First name:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography component={"span"} className={classes.paper}>
+                        <TextField
+                          value={firstName}
+                          onChange={({ target }) =>
+                            dispatch(actions.editFirstName(target.value))
+                          }
+                        />
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+                <Paper className={classes.PaperInfoBlock}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
+                        Last name:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography component={"span"} className={classes.paper}>
+                        <TextField
+                          value={lastName}
+                          onChange={({ target }) =>
+                            dispatch(actions.editLastName(target.value))
+                          }
+                        />
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+                <Paper className={classes.PaperInfoBlock}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
+                        Age:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography component={"span"} className={classes.paper}>
+                        <TextField
+                          value={age}
+                          onChange={({ target }) =>
+                            dispatch(actions.editAge(target.value))
+                          }
+                        />
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+                <Paper className={classes.PaperInfoBlock}>
+                  <Grid item container xs={12}>
+                    <Grid item xs={5}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
+                        Gender:
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={7}>
+                      <Typography component={"span"} className={classes.paper}>
+                        <TextField
+                          value={gender}
+                          onChange={({ target }) =>
+                            dispatch(actions.editGender(target.value))
+                          }
+                        />
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Paper className={classes.paper2}>
-                About yourself:
-                <TextField
-                  id="outlined-multiline-static"
-                  multiline
-                  fullWidth
-                  placeholder="text here"
-                  variant="outlined"
-                  value={aboutYourself}
-                  onChange={({ target }) =>
-                    dispatch(actions.editAboitYourself(target.value))
-                  }
-                />
+              <Paper className={classes.PaperInfoBlockYourSelf}>
+                <Typography
+                  component={"span"}
+                  className={classes.paperStaticInfo}
+                >
+                  About yourself:
+                </Typography>
+                <Typography
+                  component={"span"}
+                  className={classes.paperStaticInfoYourself}
+                >
+                  <TextField
+                    id="outlined-multiline-static"
+                    multiline
+                    fullWidth
+                    placeholder="text here"
+                    variant="outlined"
+                    value={aboutYourself}
+                    onChange={({ target }) =>
+                      dispatch(actions.editAboitYourself(target.value))
+                    }
+                  />
+                </Typography>
               </Paper>
             </Grid>
           </Grid>

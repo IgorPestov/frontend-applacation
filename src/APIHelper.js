@@ -64,6 +64,19 @@ async function refreshToken(refreshToken) {
 
   return token;
 }
+async function createNewPassword(resetLink, newPassword) {
+  const { data: user } = await axios.post(
+    API_URL + `${"createNewPassword"}`, {resetLink , newPassword}
+  );
+  return user;
+}
+async function resetPassword(email) {
+  const { data: user } = await axios.post(
+    API_URL + `${"resetPassword"}`,
+    {email}
+  );
+  return user;
+}
 
 export default {
   signUpUser,
@@ -75,4 +88,6 @@ export default {
   deleteFile,
   refreshToken,
   postUserAvatar,
+  createNewPassword,
+  resetPassword,
 };

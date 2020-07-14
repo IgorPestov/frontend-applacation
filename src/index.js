@@ -9,7 +9,8 @@ ReactDOM.render(
 
   <Router history={history}>
     <App/>
-  </Router>,
+  </Router>
+,
   document.getElementById('root')
 );
 

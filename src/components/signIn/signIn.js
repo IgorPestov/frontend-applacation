@@ -74,7 +74,6 @@ const SignIn = (props) => {
       <CssBaseline />
       <div className={classes.paper}>
         {err && <span className={classes.err}>{err.data.message}</span>}
-        {errEmpty && <span className={classes.err}>{errEmpty}</span>}
         <form className={classes.form} noValidate>
           <TextField
             error={!!err || !!errEmpty}
@@ -113,7 +112,7 @@ const SignIn = (props) => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link href="/resetPassword" variant="body2">
                 Forgot password?
               </Link>
             </Grid>

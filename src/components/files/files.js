@@ -7,6 +7,7 @@ import {
   Avatar,
   Typography,
   Button,
+  LinearProgress,
 } from "@material-ui/core";
 import {
   CreateNewFolder,
@@ -26,12 +27,9 @@ import { HeaderFiles } from "../header/index";
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
-  paper: {
-    padding: theme.spacing(1),
-    marginTop: 1,
-    maxWidht: 500,
-  },
+ 
   paper1: {
+    backgroundColor: '#d7ccc8',
     padding: theme.spacing(1),
     marginBottom: 3,
   },
@@ -47,8 +45,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   large: {
+    borderRadius: "5%",
     width: theme.spacing(15),
     height: theme.spacing(15),
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: "100%",
   },
   input: {
     display: "none",
@@ -57,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   paperFiles: {
+    backgroundColor: '#d7ccc8',
     padding: theme.spacing(1),
     marginTop: 3,
     maxWidth: "auto",
@@ -73,11 +76,28 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     display: "colums",
+    color:"#4e342e",
+    margin: theme.spacing(1),
+  },
+  buttonSave: {
+    display: "none",
+    margin: theme.spacing(1),
+  },
+  buttonSaveActive: {
+    display: "colums",
     margin: theme.spacing(1),
   },
   buttonGrid: {
     direction: "column",
     alignItems: "flex-end",
+  },
+  CheckFiles: {
+    backgroundColor: '#d7ccc8',
+    elevation: 0,
+    minHeight: "100%",
+    textAlign: "center",
+    letterSpacing: 5,
+    m: 1,
   },
 }));
 const Files = (props) => {
@@ -86,6 +106,8 @@ const Files = (props) => {
   const userAccessToken = jwtDecode(token);
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
+  const [save, setSave] = useState(false);
+  const [load, setLoad] = useState("Files is empty");
   const classes = useStyles();
 
   const { avatar, id, files } = useSelector((state) => state.user);
@@ -99,7 +121,6 @@ const Files = (props) => {
       localStorage.clear("tokenData");
     }
   };
-
   useEffect(() => {
     if (Date.now() >= userAccessToken.exp * 1000) {
       refreshToken(JSON.parse(localStorage.getItem("tokenData")).refreshToken);
@@ -109,9 +130,11 @@ const Files = (props) => {
   const postUnloadFile = async (id, payload) => {
     const filesUser = await APIHelper.postUnloadFile(id, payload);
     if (filesUser) {
+      setLoad("Click save");
       setCheck(false);
     }
   };
+
   const deleteFile = async (id, paylod) => {
     const filesUser = await APIHelper.deleteFile(id, paylod);
     if (filesUser) {
@@ -134,90 +157,107 @@ const Files = (props) => {
   };
   const saveFile = (e) => {
     e.preventDefault();
+    setLoad("Files is empty");
     showUserInfo(id, user);
+    setSave(false);
   };
   if (file) {
     setCheck(true);
+    setSave(true);
+    setLoad("File upload");
     const data = new FormData();
     data.append("file", file);
     postUnloadFile(id, data);
     setFile(null);
   }
-
-  const Files = () => {
+  const FilesUser = () => {
     return (
       <Container>
-        {files.length > 0 ? (
-          files.map((file) => {
-            const { name, size, mimetype, _id, urlImg, url, filePath } = file;
-
-            const i = Math.floor(Math.log(size) / Math.log(1024)),
-              sizes = ["bytes", "kB", "MB", "GB"];
-
-            const Size =
-              (size / Math.pow(1024, i)).toFixed(2) * 1 + " " + sizes[i];
-
-            return (
-              <Paper key={_id} className={classes.paperFiles}>
-                <Grid container spacing={2}>
-                  <Grid item>
-                    {mimetype === "image/png" ? (
-                      <Avatar src={urlImg}></Avatar>
-                    ) : (
-                      <Avatar>
-                        <Description />
-                      </Avatar>
-                    )}
-                  </Grid>
-                  <Grid item xs>
-                    <Typography gutterBottom variant="subtitle1">
-                      Name: {name}
-                    </Typography>
-                    <Typography variant="body2" gutterBottom>
-                      Size: {Size}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      Type: {mimetype}
-                    </Typography>
-                  </Grid>
-                  <Grid item className={classes.buttonGrid}>
-                    <Grid>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="default"
-                        href={url}
-                        className={classes.button}
-                        startIcon={<CloudUpload />}
-                      >
-                        Upload
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        id={_id}
-                        size="small"
-                        variant="contained"
-                        value={filePath}
-                        className={classes.button}
-                        startIcon={<Delete />}
-                        onClick={delFile}
-                      >
-                        Delete
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Paper>
-            );
-          })
+        {load === "File upload" || load === "Click save" ? (
+          <Paper>
+            <Typography
+              className={classes.CheckFiles}
+              gutterBottom
+              variant="subtitle1"
+            >
+              {load === "File upload" ? <LinearProgress /> : load}
+            </Typography>
+          </Paper>
         ) : (
           <Paper>
-            <Typography gutterBottom variant="subtitle1">
-              Files is empty
+            <Typography
+              className={classes.CheckFiles}
+              gutterBottom
+              variant="subtitle1"
+            >
+              {files.length <= 0 ? load : false}
             </Typography>
           </Paper>
         )}
+
+        {files.map((file) => {
+          const { name, size, mimetype, _id, urlImg, url, filePath } = file;
+
+          const i = Math.floor(Math.log(size) / Math.log(1024)),
+            sizes = ["bytes", "kB", "MB", "GB"];
+
+          const Size =
+            (size / Math.pow(1024, i)).toFixed(2) * 1 + " " + sizes[i];
+
+          return (
+            <Paper key={_id} className={classes.paperFiles}>
+              <Grid container spacing={2}>
+                <Grid item>
+                  {mimetype === "image/png" ? (
+                    <Avatar src={urlImg}></Avatar>
+                  ) : (
+                    <Avatar>
+                      <Description />
+                    </Avatar>
+                  )}
+                </Grid>
+                <Grid item xs>
+                  <Typography gutterBottom variant="subtitle1">
+                    Name: {name}
+                  </Typography>
+                  <Typography variant="body2" gutterBottom>
+                    Size: {Size}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Type: {mimetype}
+                  </Typography>
+                </Grid>
+                <Grid item className={classes.buttonGrid}>
+                  <Grid>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="default"
+                      href={url}
+                      className={classes.button}
+                      startIcon={<CloudUpload />}
+                    >
+                      Download
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      id={_id}
+                      size="small"
+                      variant="contained"
+                      value={filePath}
+                      className={classes.button}
+                      startIcon={<Delete />}
+                      onClick={delFile}
+                    >
+                      Delete
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Paper>
+          );
+        })}
       </Container>
     );
   };
@@ -258,7 +298,9 @@ const Files = (props) => {
                     variant="contained"
                     color="primary"
                     size="small"
-                    className={classes.button}
+                    className={
+                      save ? classes.buttonSaveActive : classes.buttonSave
+                    }
                     startIcon={<Save />}
                     disabled={check}
                     onClick={saveFile}
@@ -274,7 +316,7 @@ const Files = (props) => {
                 item
                 xs={12}
               >
-                <Files />
+                <FilesUser />
               </Grid>
             </Grid>
           </Grid>

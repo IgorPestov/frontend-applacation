@@ -6,14 +6,24 @@ import {
   Toolbar,
   Typography,
   Button,
+  Divider,
+  Drawer,
+  Hidden,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@material-ui/core";
 import { Menu } from "@material-ui/icons";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { Person, Folder } from "@material-ui/icons";
 
-const drawerWidth = 240;
+const drawerWidth = 150;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
-
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
+  },
   title: {
     flexGrow: 1,
   },
@@ -33,12 +43,22 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
 const HeaderProfile = (props) => {
+  const theme = useTheme();
+  const { window } = props;
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const File = () => {
+    props.history.push("/uploadFile");
+  };
+  const Profile = () => {
+    props.history.push("/profile");
+  };
+
   const logOut = () => {
     localStorage.setItem("logged", false);
     if (!localStorage.setItem("logged", false)) {
@@ -46,6 +66,8 @@ const HeaderProfile = (props) => {
       localStorage.clear("tokenData");
     }
   };
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -60,6 +82,39 @@ const HeaderProfile = (props) => {
           >
             <Menu />
           </IconButton>
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true,
+              }}
+            >
+              <div>
+                <div className={classes.toolbar} />
+                <Divider />
+                <ListItem button key={"Profile"} onClick={Profile}>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText primary={"Profile"} />
+                </ListItem>
+                <ListItem button key={"File"} onClick={File}>
+                  <ListItemIcon>
+                    <Folder />
+                  </ListItemIcon>
+                  <ListItemText primary={"File"} />
+                </ListItem>
+                <Divider />
+              </div>
+            </Drawer>
+          </Hidden>
           <Typography variant="h6" className={classes.title} noWrap>
             Profile
           </Typography>
