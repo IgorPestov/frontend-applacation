@@ -21,7 +21,8 @@ const drawerWidth = 150;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
 
-  PaperInfo: {
+  PaperInfoBlock: {
+    backgroundColor: "#d7ccc8",
     marginTop: 3,
     minWidth: "100%",
   },
@@ -34,20 +35,27 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
   },
   paperStaticInfo: {
-    elevation: 0,
     minHeight: "100%",
     textAlign: "right",
     letterSpacing: 5,
-    m: 1,
   },
-  paper1: {
+  PaperInfoBlockAll: {
+    backgroundColor: "#d7ccc8",
+
     padding: theme.spacing(1),
-    minWidth : 150,
+    minWidth: 150,
     minHeight: 200,
     paddingBottom: 0,
     marginRight: 3,
   },
-  paper2: {
+  paperStaticInfoYourself: {
+    minHeight: "100%",
+
+    letterSpacing: 5,
+  },
+  PaperInfoBlockYourSelf: {
+    backgroundColor: "#d7ccc8",
+
     padding: theme.spacing(1),
     marginTop: 3,
     minHeight: 100,
@@ -156,7 +164,7 @@ const UpdateUserInfo = (props) => {
           <Grid container className={classes.grid}>
             <Grid item container xs={12} spacing={3}>
               <Grid item xs={12} sm={4} lg={2}>
-                <Paper className={classes.paper1}>
+                <Paper className={classes.PaperInfoBlockAll}>
                   Avatar
                   <Avatar
                     variant="square"
@@ -213,15 +221,18 @@ const UpdateUserInfo = (props) => {
                 lg={10}
                 className={classes.gridInfoUser}
               >
-                <Paper className={classes.PaperInfo}>
+                <Paper className={classes.PaperInfoBlock}>
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
-                      <Typography className={classes.paperStaticInfo}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
                         First name:
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography className={classes.paper}>
+                      <Typography component={"span"} className={classes.paper}>
                         <TextField
                           value={firstName}
                           onChange={({ target }) =>
@@ -232,15 +243,18 @@ const UpdateUserInfo = (props) => {
                     </Grid>
                   </Grid>
                 </Paper>
-                <Paper className={classes.PaperInfo}>
+                <Paper className={classes.PaperInfoBlock}>
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
-                      <Typography className={classes.paperStaticInfo}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
                         Last name:
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography className={classes.paper}>
+                      <Typography component={"span"} className={classes.paper}>
                         <TextField
                           value={lastName}
                           onChange={({ target }) =>
@@ -251,15 +265,18 @@ const UpdateUserInfo = (props) => {
                     </Grid>
                   </Grid>
                 </Paper>
-                <Paper className={classes.PaperInfo}>
+                <Paper className={classes.PaperInfoBlock}>
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
-                      <Typography className={classes.paperStaticInfo}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
                         Age:
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography className={classes.paper}>
+                      <Typography component={"span"} className={classes.paper}>
                         <TextField
                           value={age}
                           onChange={({ target }) =>
@@ -270,15 +287,18 @@ const UpdateUserInfo = (props) => {
                     </Grid>
                   </Grid>
                 </Paper>
-                <Paper className={classes.PaperInfo}>
+                <Paper className={classes.PaperInfoBlock}>
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
-                      <Typography className={classes.paperStaticInfo}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
                         Gender:
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography className={classes.paper}>
+                      <Typography component={"span"} className={classes.paper}>
                         <TextField
                           value={gender}
                           onChange={({ target }) =>
@@ -292,9 +312,17 @@ const UpdateUserInfo = (props) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Typography>
-                <Paper className={classes.paper2}>
-                  About yourself:{" "}
+              <Paper className={classes.PaperInfoBlockYourSelf}>
+                <Typography
+                  component={"span"}
+                  className={classes.paperStaticInfo}
+                >
+                  About yourself:
+                </Typography>
+                <Typography
+                  component={"span"}
+                  className={classes.paperStaticInfoYourself}
+                >
                   <TextField
                     id="outlined-multiline-static"
                     multiline
@@ -306,8 +334,8 @@ const UpdateUserInfo = (props) => {
                       dispatch(actions.editAboitYourself(target.value))
                     }
                   />
-                </Paper>
-              </Typography>
+                </Typography>
+              </Paper>
             </Grid>
           </Grid>
         </Container>

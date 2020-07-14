@@ -17,40 +17,49 @@ import Panel from "../panel";
 import { HeaderProfile } from "../header/index";
 
 const drawerWidth = 150;
+
 const useStyles = makeStyles((theme) => ({
   grid: {
     pading: theme.spacing(1),
   },
-  PaperInfo: {
+  PaperInfoBlock: {
+    backgroundColor: '#d7ccc8',
     marginTop: 3,
-    minWidth: "100%",
+    width: "100%",
   },
   paper: {
     elevation: 0,
     minHeight: "100%",
-    fontWeight: 600,
+    fontWeight: 200,
     fontStyle: "italic",
     fontFamily: "Monospace",
     fontSize: 16,
+    wordBreak: "break-all",
   },
   paperStaticInfo: {
-    elevation: 0,
     minHeight: "100%",
     textAlign: "right",
     letterSpacing: 5,
-    m: 1,
+    display: "block",
   },
-  paper1: {
+  paperStaticInfoYourself: {
+    minHeight: "100%",
+
+    letterSpacing: 5,
+  },
+  PaperInfoBlockAll: {
+    backgroundColor: '#d7ccc8',
     padding: theme.spacing(1),
-    minWidth : 150,
-    minHeight: 200,
     paddingBottom: 0,
     marginRight: 3,
   },
-  paper2: {
+  PaperInfoBlockYourSelf: {
+    backgroundColor: '#d7ccc8',
     padding: theme.spacing(1),
     marginTop: 3,
+    marginRight: 3,
     minHeight: 100,
+    minWidth: "100%",
   },
 
   root: {
@@ -130,10 +139,10 @@ const Profile = (props) => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Container className={classes.root}>
-          <Grid container className={classes.grid}>
+          <Grid container direction="row" spacing={3} className={classes.grid}>
             <Grid item container xs={12} spacing={3}>
-              <Grid item xs={12} sm={4} lg ={2}>
-                <Paper className={classes.paper1}>
+              <Grid item xs={12} sm={4} lg={2}>
+                <Paper className={classes.PaperInfoBlockAll}>
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
@@ -158,56 +167,78 @@ const Profile = (props) => {
                   </label>
                 </Paper>
               </Grid>
-              <Grid item container alignItems="center" xs={12} sm={8} lg ={10} className={classes.gridInfoUser}>
-                <Paper className={classes.PaperInfo}>
+              <Grid
+                item
+                container
+                alignItems="center"
+                xs={12}
+                sm={8}
+                lg={10}
+                className={classes.gridInfoUser}
+              >
+                <Paper className={classes.PaperInfoBlock}>
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
-                      <Typography className={classes.paperStaticInfo}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
                         First name:
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography className={classes.paper}>
+                      <Typography component={"span"} className={classes.paper}>
                         {firstName}
                       </Typography>
                     </Grid>
                   </Grid>
                 </Paper>
-                <Paper className={classes.PaperInfo}>
+                <Paper className={classes.PaperInfoBlock}>
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
-                      <Typography className={classes.paperStaticInfo}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
                         Last name:
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography className={classes.paper}>
+                      <Typography component={"span"} className={classes.paper}>
                         {lastName}
                       </Typography>
                     </Grid>
                   </Grid>
                 </Paper>
-                <Paper className={classes.PaperInfo}>
+                <Paper className={classes.PaperInfoBlock}>
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
-                      <Typography className={classes.paperStaticInfo}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
                         Age:
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography className={classes.paper}>{age}</Typography>
+                      <Typography component={"span"} className={classes.paper}>
+                        {age}
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Paper>
-                <Paper className={classes.PaperInfo}>
+                <Paper className={classes.PaperInfoBlock}>
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
-                      <Typography className={classes.paperStaticInfo}>
+                      <Typography
+                        component={"span"}
+                        className={classes.paperStaticInfo}
+                      >
                         Gender:
                       </Typography>
                     </Grid>
                     <Grid item xs={7}>
-                      <Typography className={classes.paper}>
+                      <Typography component={"span"} className={classes.paper}>
                         {gender}
                       </Typography>
                     </Grid>
@@ -215,12 +246,18 @@ const Profile = (props) => {
                 </Paper>
               </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Typography>
-                <Paper className={classes.paper2}>
-                  About yourself: {aboutYourself}
-                </Paper>
-              </Typography>
+            <Grid item container xs={12}>
+              <Paper className={classes.PaperInfoBlockYourSelf}>
+                <Typography
+                  component={"span"}
+                  className={classes.paperStaticInfoYourself}
+                >
+                  About yourself:
+                </Typography>
+                <Typography paragraph className={classes.paper}>
+                  {aboutYourself}
+                </Typography>
+              </Paper>
             </Grid>
           </Grid>
         </Container>

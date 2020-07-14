@@ -8,13 +8,32 @@ import store from "./store/store";
 import Files from "./components/files";
 import CreateNewPassword from "./components/createNewPassword/index";
 import ResetPassword from "./components/resetPassword/index";
+import { createMuiTheme ,ThemeProvider} from "@material-ui/core/styles";
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#9c786c',
+      main: '#6d4c41',
+      dark: '#40241a',
+      contrastText: '#d7ccc8',
+    },
+    secondary: {
+      light: '#9c786c',
+      main: '#6d4c41',
+      dark: '#40241a',
+      contrastText: '#8d6e63',
+    },
+    backgroundColor: '#bcaaa4',
+  },
+});
 
 class App extends Component {
   render() {
     const { history } = this.props;
 
     return (
+      <ThemeProvider theme={theme} > 
       <React.Fragment>
         <Provider store={store}>
           <Switch>
@@ -34,6 +53,7 @@ class App extends Component {
           </Switch>
         </Provider>
       </React.Fragment>
+      </ThemeProvider>
     );
   }
 }

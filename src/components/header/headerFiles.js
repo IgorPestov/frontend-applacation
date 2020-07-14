@@ -28,14 +28,14 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   appBar: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       display: "none",
     },
   },
@@ -83,7 +83,6 @@ const HeaderFiles = (props) => {
             <Menu />
           </IconButton>
           <Hidden smUp implementation="css">
-          
             <Drawer
               container={container}
               variant="temporary"
@@ -97,7 +96,6 @@ const HeaderFiles = (props) => {
                 keepMounted: true,
               }}
             >
-              
               <div>
                 <div className={classes.toolbar} />
                 <Divider />

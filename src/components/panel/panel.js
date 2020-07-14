@@ -14,7 +14,7 @@ import { Person, Folder } from "@material-ui/icons";
 const drawerWidth = 150;
 const useStyles = makeStyles((theme) => ({
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: drawerWidth,
       flexShrink: 0,
     },
