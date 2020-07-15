@@ -119,7 +119,7 @@ const HeaderFiles = (props) => {
             FILE
           </Typography>
           <Button color="inherit" onClick={logOut}>
-            logout
+            LOGOUT
           </Button>
         </Toolbar>
       </AppBar>
