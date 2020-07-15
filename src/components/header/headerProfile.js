@@ -116,7 +116,7 @@ const HeaderProfile = (props) => {
             </Drawer>
           </Hidden>
           <Typography variant="h6" className={classes.title} noWrap>
-            Profile
+            PROFILE
           </Typography>
           <Button color="inherit" onClick={logOut}>
             logout
