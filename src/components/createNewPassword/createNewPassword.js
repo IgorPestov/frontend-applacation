@@ -59,7 +59,7 @@ const CreateNewPassword = (props) => {
       event.target.value.length < 8
     ) {
       return setErrPassword(
-        'Password must be 8 characters long and must be have no spaces!"'
+        'Password must be 8 characters long and must be have no spaces!'
       );
     }
     setErrPassword(null);
