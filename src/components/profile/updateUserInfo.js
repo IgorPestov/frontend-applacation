@@ -17,7 +17,7 @@ import actions from "../../store/action/action";
 import { HeaderProfile } from "../header";
 import Panel from "../panel";
 
-const drawerWidth = 150;
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
 
@@ -135,15 +135,18 @@ const UpdateUserInfo = (props) => {
     }
   };
   const updateUserInfo = async (id, payload) => {
-    await APIHelper.updateUserInfo(id, payload);
+   const newUserInfo = await APIHelper.updateUserInfo(id, payload);
+    if(newUserInfo) {
+     if (props.history.location.pathname === "/updateUserInfo") {
+      props.history.push("/profile");
+    }
+    }
   };
 
   const EditInfo = async (e) => {
     e.preventDefault();
     updateUserInfo(id, user);
-    if (props.history.location.pathname === "/updateUserInfo") {
-      props.history.push("/profile");
-    }
+    
   };
 
   if (file) {

@@ -17,7 +17,7 @@ import { Menu } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Person, Folder } from "@material-ui/icons";
 
-const drawerWidth = 150;
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
 

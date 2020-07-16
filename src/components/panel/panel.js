@@ -11,7 +11,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Person, Folder } from "@material-ui/icons";
 
-const drawerWidth = 150;
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   drawer: {
     [theme.breakpoints.up("sm")]: {

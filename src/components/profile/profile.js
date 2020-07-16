@@ -16,7 +16,7 @@ import actions from "../../store/action/action";
 import Panel from "../panel";
 import { HeaderProfile } from "../header/index";
 
-const drawerWidth = 150;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   grid: {
