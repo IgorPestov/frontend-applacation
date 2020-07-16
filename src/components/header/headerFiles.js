@@ -54,9 +54,11 @@ const HeaderFiles = (props) => {
   };
   const File = () => {
     props.history.push("/uploadFile");
+    handleDrawerToggle();
   };
   const Profile = () => {
     props.history.push("/profile");
+    handleDrawerToggle();
   };
 
   const logOut = () => {

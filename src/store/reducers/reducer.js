@@ -8,7 +8,7 @@ let initialState = {
     aboutYourself: "",
     avatar: {},
     files: [],
-    resetLink:"",
+    resetLink: "",
   },
 };
 
@@ -72,10 +72,10 @@ const reducer = (state = initialState, action) => {
         ...state.user,
         user: { ...state.uaer, files: action.payload },
       };
-      case "RESET_LINK" :
-        return {
-          user : {resetLink : action.payload}
-        }
+    case "RESET_LINK":
+      return {
+        user: { resetLink: action.payload },
+      };
     default:
       return state;
   }

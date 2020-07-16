@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     pading: theme.spacing(1),
   },
   PaperInfoBlock: {
-    backgroundColor: '#d7ccc8',
+    backgroundColor: "#d7ccc8",
     marginTop: 3,
     width: "100%",
   },
@@ -47,14 +47,13 @@ const useStyles = makeStyles((theme) => ({
 
     letterSpacing: 5,
   },
-  PaperInfoBlockAll: {
-    backgroundColor: '#d7ccc8',
+  PaperInfoBlockAvatar: {
+    backgroundColor: "#d7ccc8",
     padding: theme.spacing(1),
     paddingBottom: 0,
-    marginRight: 3,
   },
   PaperInfoBlockYourSelf: {
-    backgroundColor: '#d7ccc8',
+    backgroundColor: "#d7ccc8",
     padding: theme.spacing(1),
     marginTop: 3,
     marginRight: 3,
@@ -140,9 +139,9 @@ const Profile = (props) => {
         <div className={classes.toolbar} />
         <Container className={classes.root}>
           <Grid container direction="row" spacing={3} className={classes.grid}>
-            <Grid item container xs={12} spacing={3}>
+            <Grid item container xs={12}>
               <Grid item xs={12} sm={4} lg={2}>
-                <Paper className={classes.PaperInfoBlockAll}>
+                <Paper className={classes.PaperInfoBlockAvatar}>
                   <Avatar
                     variant="square"
                     alt="Remy Sharp"
