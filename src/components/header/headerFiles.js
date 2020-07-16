@@ -118,7 +118,7 @@ const HeaderFiles = (props) => {
             </Drawer>
           </Hidden>
           <Typography variant="h6" className={classes.title} noWrap>
-            FILEEEEEEEEE
+            FILE
           </Typography>
           <Button color="inherit" onClick={logOut}>
             LOGOUT
