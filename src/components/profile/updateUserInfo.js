@@ -17,7 +17,7 @@ import actions from "../../store/action/action";
 import { HeaderProfile } from "../header";
 import Panel from "../panel";
 
-const drawerWidth = 150;
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
 
@@ -39,18 +39,15 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "right",
     letterSpacing: 5,
   },
-  PaperInfoBlockAll: {
+  PaperInfoBlockAvatar: {
     backgroundColor: "#d7ccc8",
-
     padding: theme.spacing(1),
     minWidth: 150,
     minHeight: 200,
     paddingBottom: 0,
-    marginRight: 3,
   },
   paperStaticInfoYourself: {
     minHeight: "100%",
-
     letterSpacing: 5,
   },
   PaperInfoBlockYourSelf: {
@@ -135,15 +132,17 @@ const UpdateUserInfo = (props) => {
     }
   };
   const updateUserInfo = async (id, payload) => {
-    await APIHelper.updateUserInfo(id, payload);
+    const newUserInfo = await APIHelper.updateUserInfo(id, payload);
+    if (newUserInfo) {
+      if (props.history.location.pathname === "/updateUserInfo") {
+        props.history.push("/profile");
+      }
+    }
   };
 
   const EditInfo = async (e) => {
     e.preventDefault();
     updateUserInfo(id, user);
-    if (props.history.location.pathname === "/updateUserInfo") {
-      props.history.push("/profile");
-    }
   };
 
   if (file) {
@@ -161,10 +160,10 @@ const UpdateUserInfo = (props) => {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Container className={classes.root}>
-          <Grid container className={classes.grid}>
-            <Grid item container xs={12} spacing={3}>
+          <Grid container spacing={3} className={classes.grid}>
+            <Grid item container xs={12}>
               <Grid item xs={12} sm={4} lg={2}>
-                <Paper className={classes.PaperInfoBlockAll}>
+                <Paper className={classes.PaperInfoBlockAvatar}>
                   Avatar
                   <Avatar
                     variant="square"

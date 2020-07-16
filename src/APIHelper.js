@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/user/";
+const API_URL = "https://exceedbackend.herokuapp.com/user/";
 
 async function signUpUser(email, password, firstName) {
   const { data: newUser } = await axios.post(API_URL + `${"signUp"}`, {
@@ -58,23 +58,23 @@ async function deleteFile(id, payload) {
   return files;
 }
 async function refreshToken(refreshToken) {
-  const URL = "http://localhost:3000/user/refresh-tokens";
+  const URL = "https://exceedbackend.herokuapp.com/user/refresh-tokens";
 
   const { data: token } = await axios.post(URL, { refreshToken });
 
   return token;
 }
 async function createNewPassword(resetLink, newPassword) {
-  const { data: user } = await axios.post(
-    API_URL + `${"createNewPassword"}`, {resetLink , newPassword}
-  );
+  const { data: user } = await axios.post(API_URL + `${"createNewPassword"}`, {
+    resetLink,
+    newPassword,
+  });
   return user;
 }
 async function resetPassword(email) {
-  const { data: user } = await axios.post(
-    API_URL + `${"resetPassword"}`,
-    {email}
-  );
+  const { data: user } = await axios.post(API_URL + `${"resetPassword"}`, {
+    email,
+  });
   return user;
 }
 

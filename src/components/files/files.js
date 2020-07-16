@@ -27,9 +27,9 @@ import { HeaderFiles } from "../header/index";
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
- 
+
   paper1: {
-    backgroundColor: '#d7ccc8',
+    backgroundColor: "#d7ccc8",
     padding: theme.spacing(1),
     marginBottom: 3,
   },
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   paperFiles: {
-    backgroundColor: '#d7ccc8',
+    backgroundColor: "#d7ccc8",
     padding: theme.spacing(1),
     marginTop: 3,
     maxWidth: "auto",
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     display: "colums",
-    color:"#4e342e",
+    color: "#4e342e",
     margin: theme.spacing(1),
   },
   buttonSave: {
@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-end",
   },
   CheckFiles: {
-    backgroundColor: '#d7ccc8',
+    backgroundColor: "#d7ccc8",
     elevation: 0,
     minHeight: "100%",
     textAlign: "center",

@@ -17,7 +17,7 @@ import { Menu } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Person, Folder } from "@material-ui/icons";
 
-const drawerWidth = 150;
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   grid: { margin: theme.spacing(2) },
   toolbar: theme.mixins.toolbar,
@@ -54,9 +54,11 @@ const HeaderProfile = (props) => {
   };
   const File = () => {
     props.history.push("/uploadFile");
+    handleDrawerToggle();
   };
   const Profile = () => {
     props.history.push("/profile");
+    handleDrawerToggle();
   };
 
   const logOut = () => {
@@ -116,7 +118,7 @@ const HeaderProfile = (props) => {
             </Drawer>
           </Hidden>
           <Typography variant="h6" className={classes.title} noWrap>
-            Profile
+            PROFILE
           </Typography>
           <Button color="inherit" onClick={logOut}>
             logout

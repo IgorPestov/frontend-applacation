@@ -35,7 +35,7 @@ const CreateNewPassword = (props) => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [err, setErr] = useState(null);
-  const [errToken, setErrToken] = useState(null)
+  const [errToken, setErrToken] = useState(null);
   const [done, setDone] = useState(null);
   const regPassword = /^\S*$/;
   const [errPassword, setErrPassword] = useState(null);
@@ -59,7 +59,7 @@ const CreateNewPassword = (props) => {
       event.target.value.length < 8
     ) {
       return setErrPassword(
-        'Password must be 8 characters long and must be have no spaces!'
+        "Password must be 8 characters long and must be have no spaces!"
       );
     }
     setErrPassword(null);
@@ -71,8 +71,7 @@ const CreateNewPassword = (props) => {
     } else {
       setErr("Passwords mismatch");
     }
-    setErrToken(null)
-
+    setErrToken(null);
   };
 
   const createNewPassword = async (resetLink, newPassword) => {
@@ -80,11 +79,9 @@ const CreateNewPassword = (props) => {
       const user = await APIHelper.createNewPassword(resetLink, newPassword);
       setDone(user.message);
       props.history.push("/signIn");
-
     } catch (err) {
-      setErrToken( err.response.data.err)
+      setErrToken(err.response.data.err);
     }
-
   };
   const Alerts = () => {
     if (done) {
@@ -116,7 +113,7 @@ const CreateNewPassword = (props) => {
         <form className={classes.form} noValidate>
           <Alerts />
           <TextField
-            error={!!errPassword }
+            error={!!errPassword}
             onChange={changeNewPassword}
             variant="outlined"
             margin="normal"
