@@ -20,7 +20,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   grid: {
-    pading: theme.spacing(1),
+    margin: theme.spacing(1),
   },
   PaperInfoBlock: {
     backgroundColor: "#d7ccc8",

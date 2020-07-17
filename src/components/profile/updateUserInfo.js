@@ -7,6 +7,8 @@ import {
   Avatar,
   TextField,
   Typography,
+  NativeSelect,
+  FormControl,
 } from "@material-ui/core";
 import { AddAPhoto, Save } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,6 +18,7 @@ import jwtDecode from "jwt-decode";
 import actions from "../../store/action/action";
 import { HeaderProfile } from "../header";
 import Panel from "../panel";
+import { Alert } from "@material-ui/lab";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -89,6 +92,8 @@ const useStyles = makeStyles((theme) => ({
 const UpdateUserInfo = (props) => {
   const [file, setFile] = useState(null);
   const [check, setCheck] = useState(false);
+  const [err, setErr] = useState(null);
+  const [errOld, setErrOld] = useState(null);
   const {
     firstName,
     lastName,
@@ -98,6 +103,7 @@ const UpdateUserInfo = (props) => {
     aboutYourself,
     avatar,
   } = useSelector((state) => state.user);
+  const regAge = /^\d{0,}$/;
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
@@ -139,7 +145,6 @@ const UpdateUserInfo = (props) => {
       }
     }
   };
-
   const EditInfo = async (e) => {
     e.preventDefault();
     updateUserInfo(id, user);
@@ -152,7 +157,30 @@ const UpdateUserInfo = (props) => {
     postUserAvatar(id, data);
     setFile(null);
   }
-
+  const handleChangeAge = (event) => {
+    console.log(event.target.value);
+    if (!regAge.test(event.target.value)) {
+      return setErr("Only nambers");
+    }
+    if (event.target.value > 120) {
+      return setErrOld("Realy, so old?");
+    }
+    if (event.target.value <= 0) {
+      dispatch(actions.editAge(null));
+    }
+    setErrOld(null);
+    setErr(null);
+    return dispatch(actions.editAge(event.target.value));
+  };
+  const handleChange = (event) => {
+    dispatch(actions.editGender(event.target.value));
+  };
+  const Alerts = () => {
+    if (err || errOld) {
+      return <Alert severity="error">{err || errOld}</Alert>;
+    }
+    return null;
+  };
   return (
     <div className={classes.root}>
       <HeaderProfile history={props.history} />
@@ -265,6 +293,7 @@ const UpdateUserInfo = (props) => {
                   </Grid>
                 </Paper>
                 <Paper className={classes.PaperInfoBlock}>
+                  <Alerts />
                   <Grid item container xs={12}>
                     <Grid item xs={5}>
                       <Typography
@@ -277,10 +306,11 @@ const UpdateUserInfo = (props) => {
                     <Grid item xs={7}>
                       <Typography component={"span"} className={classes.paper}>
                         <TextField
+                          onChange={handleChangeAge}
                           value={age}
-                          onChange={({ target }) =>
-                            dispatch(actions.editAge(target.value))
-                          }
+                          // onChange={({ target }) =>
+                          //   dispatch(actions.editAge(target.value))
+                          // }
                         />
                       </Typography>
                     </Grid>
@@ -298,12 +328,19 @@ const UpdateUserInfo = (props) => {
                     </Grid>
                     <Grid item xs={7}>
                       <Typography component={"span"} className={classes.paper}>
-                        <TextField
-                          value={gender}
-                          onChange={({ target }) =>
-                            dispatch(actions.editGender(target.value))
-                          }
-                        />
+                        <FormControl className={classes.formControl}>
+                          <NativeSelect
+                            value={gender}
+                            onChange={handleChange}
+                            name="gender"
+                            className={classes.selectEmpty}
+                            inputProps={{ "aria-label": "gender" }}
+                          >
+                            <option value="">None</option>
+                            <option value={"Male"}>Male</option>
+                            <option value={"Famale"}>Famale</option>
+                          </NativeSelect>
+                        </FormControl>
                       </Typography>
                     </Grid>
                   </Grid>
