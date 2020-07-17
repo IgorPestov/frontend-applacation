@@ -158,7 +158,6 @@ const UpdateUserInfo = (props) => {
     setFile(null);
   }
   const handleChangeAge = (event) => {
-    console.log(event.target.value);
     if (!regAge.test(event.target.value)) {
       return setErr("Only nambers");
     }
@@ -308,9 +307,6 @@ const UpdateUserInfo = (props) => {
                         <TextField
                           onChange={handleChangeAge}
                           value={age}
-                          // onChange={({ target }) =>
-                          //   dispatch(actions.editAge(target.value))
-                          // }
                         />
                       </Typography>
                     </Grid>
