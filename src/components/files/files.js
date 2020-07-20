@@ -208,7 +208,7 @@ const Files = (props) => {
             <Paper key={_id} className={classes.paperFiles}>
               <Grid container spacing={2}>
                 <Grid item>
-                  {mimetype === "image/png" || "image/jpeg" ? (
+                  {mimetype === ("image/png" && "image/jpeg") ? (
                     <Avatar src={urlImg}></Avatar>
                   ) : (
                     <Avatar>
