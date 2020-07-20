@@ -334,7 +334,7 @@ const UpdateUserInfo = (props) => {
                           >
                             <option value="">None</option>
                             <option value={"Male"}>Male</option>
-                            <option value={"Famale"}>Famale</option>
+                            <option value={"Female"}>Female</option>
                           </NativeSelect>
                         </FormControl>
                       </Typography>
